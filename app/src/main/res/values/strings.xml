@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">photos</string>
+    <string name="search">Поиск</string>
+    <string name="load">Загрузить</string>
+    <string name="photos_fragment">Фото</string>
+    <string name="view_photo_fragment">Просмотр</string>
+    <string name="favorite_label">Избранное</string>
+
+</resources>
