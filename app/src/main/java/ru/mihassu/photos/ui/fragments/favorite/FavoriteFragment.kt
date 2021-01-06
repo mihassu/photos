@@ -32,7 +32,7 @@ class FavoriteFragment : Fragment() {
 
     private lateinit var viewModel: FavoriteViewModel
     private lateinit var adapter : FavoriteRvAdapter
-    private lateinit var navController: NavController
+//    private lateinit var navController: NavController
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +50,7 @@ class FavoriteFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+//        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         viewModel.getPhotosLiveData().observe(viewLifecycleOwner, { photos: List<Photo> ->
             adapter.setDataList(photos)
         } )
@@ -82,7 +82,8 @@ class FavoriteFragment : Fragment() {
     private fun openSinglePhoto(photo: Photo) {
         val bundle = Bundle()
         bundle.putLong(Constants.PHOTO_ID_EXTRA, photo.id)
-        navController.navigate(R.id.action_to_single_photo_fragment, bundle)
+        Navigation.findNavController(requireView()).navigate(R.id.action_favorites_to_single_photo, bundle)
+//        navController.navigate(R.id.action_to_single_photo_fragment, bundle)
     }
 
  }

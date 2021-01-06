@@ -8,6 +8,9 @@ import androidx.navigation.NavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import okhttp3.*
 import ru.mihassu.photos.R
+import ru.mihassu.photos.di.ActivityComponent
+import ru.mihassu.photos.di.ActivityContextModule
+import ru.mihassu.photos.di.DaggerActivityComponent
 import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
@@ -15,6 +18,10 @@ class MainActivity : AppCompatActivity() {
     private val searchButton: Button? = null
     private lateinit var navController: NavController
     private lateinit var bottomNavigationView: BottomNavigationView
+    companion object {
+        @JvmStatic
+        lateinit var activityComponent: ActivityComponent
+    }
 
     //    //Если конструктор презентера с параметрами
     //    @ProvidePresenter
@@ -25,6 +32,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        activityComponent = DaggerActivityComponent.builder()
+                .activityContextModule(ActivityContextModule(this))
+                .build()
 //        navController = Navigation.findNavController(this, R.id.nav_host_bottom)
 //        initViews()
     }
@@ -90,9 +100,5 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         }
-    }
-
-    companion object {
-        const val PHOTOS_FRAGMENT = "fragment_photos"
     }
 }

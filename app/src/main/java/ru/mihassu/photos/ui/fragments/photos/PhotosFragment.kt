@@ -49,7 +49,7 @@ class PhotosFragment : Fragment() //extends MvpAppCompatFragment implements IPho
     private lateinit var rvPhotos: PhotosRecyclerView
     //    @InjectPresenter
     //    PhotosPresenter mainPresenter;
-    private lateinit var navController: NavController
+//    private lateinit var navController: NavController
     private lateinit var viewModel: PhotosViewModel
     private lateinit var animator: MyAnimator
     private val disposables = CompositeDisposable()
@@ -76,7 +76,7 @@ class PhotosFragment : Fragment() //extends MvpAppCompatFragment implements IPho
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+//        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         animator = MyAnimator(requireContext())
         viewModel.getPhotosLiveData()
                 .observe(viewLifecycleOwner, { photosCallback: PhotosCallback ->
@@ -144,7 +144,8 @@ class PhotosFragment : Fragment() //extends MvpAppCompatFragment implements IPho
         val bundle = Bundle()
         bundle.putLong(Constants.PHOTO_ID_EXTRA, photo.id)
 //        bundle.putParcelable("photo", photo)
-        navController.navigate(R.id.action_to_single_photo_fragment, bundle)
+        Navigation.findNavController(requireView()).navigate(R.id.action_photos_to_single_photo, bundle)
+//        navController.navigate(R.id.action_to_single_photo_fragment, bundle)
     }
 
     private fun startSearch() {
