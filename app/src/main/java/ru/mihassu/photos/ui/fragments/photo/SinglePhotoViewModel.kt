@@ -9,6 +9,7 @@ import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import ru.mihassu.photos.common.Logi
 import ru.mihassu.photos.domain.Photo
+import ru.mihassu.photos.domain.PhotoComment
 import ru.mihassu.photos.domain.PhotoSize
 import ru.mihassu.photos.repository.PhotosRepository
 import ru.mihassu.photos.ui.db.DataBaseInteractor
@@ -25,15 +26,18 @@ class SinglePhotoViewModel(private val photosRepository: PhotosRepository, priva
 
     fun load(photoId: Long) {
         dbInteractor.getFromCacheBaseById(photoId)
-                .flatMap { photo -> photosRepository.getPhotoSizes(photo.id.toString())}
-                .zipWith(dbInteractor.getFromCacheBaseById(photoId), object : BiFunction<List<PhotoSize>, Photo, Photo> {
-                    override fun apply(photoSizes: List<PhotoSize>, photo: Photo): Photo {
-                        return photo.copy(sizes = photoSizes) //добавление PhotoSizes
-                    }
+                .zipWith(photosRepository.getPhotoSizes(photoId.toString()), { photo, photoSizes ->
+                    photo.copy(sizes = photoSizes) //добавление PhotoSizes
+                })
+                .zipWith(photosRepository.getPhotoComments(photoId.toString()), { photo, photoComments ->
+                    photo.copy(comments = photoComments) //добавление комментариев
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ photo -> photoLiveData.value = photo}, { th -> Logi.logIt("SinglePhotoViewModel - load() error: ${th.message}")})
+                .subscribe(
+                        { photo -> photoLiveData.value = photo},
+                        { th -> Logi.logIt("SinglePhotoViewModel - load() error: ${th.message}")}
+                )
                 .apply { disposables.add(this) }
     }
 

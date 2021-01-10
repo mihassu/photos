@@ -8,15 +8,24 @@
     tools:context=".ui.fragments.main.MainFragment"
     android:clipChildren="false">
 
-    <fragment
-        android:id="@+id/nav_host_bottom"
-        android:name="androidx.navigation.fragment.NavHostFragment"
+<!--    <fragment-->
+<!--        android:id="@+id/nav_host_bottom"-->
+<!--        android:name="androidx.navigation.fragment.NavHostFragment"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_alignParentTop="true"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        app:defaultNavHost="false"-->
+<!--        app:navGraph="@navigation/bottom_navigation" />-->
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        app:defaultNavHost="false"
-        app:navGraph="@navigation/bottom_navigation" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@id/bottom_navigation"/>
 
     <View
         android:layout_width="match_parent"
@@ -32,16 +41,13 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         app:itemBackground="@color/bottomNavBackground"
+        android:background="@color/bottomNavBackground"
         app:itemIconTint="@color/checked_selector"
         app:itemTextColor="@color/checked_selector"
-        app:menu="@menu/bottom_navigation_menu"
+        app:menu="@menu/bottom_menu"
         app:elevation="8dp"
         android:elevation="8dp">
     </com.google.android.material.bottomnavigation.BottomNavigationView>
-
-
-
-
 </RelativeLayout>
 
     <!--    android:layout_above="@+id/bottom_navigation"-->

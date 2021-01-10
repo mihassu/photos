@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">@color/appBackground</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorPrimary">#EFF2F3</color>
+    <color name="colorPrimaryDark">#213a60</color>
+    <color name="colorAccent">#00BFFF</color>
+    <color name="colorUnchecked">#6E7071</color>
     <color name="darkGray">#141313</color>
-    <color name="appBackground">#576566</color>
-    <color name="bottomNavBackground">#424c4d</color>
+    <color name="appBackground">#C4D1D5</color>
+    <color name="bottomNavBackground">@color/colorPrimary</color>
+    <color name="bottomSheetBackground">@color/colorPrimary</color>
 
-<!--    SinglePhoto-->
+
+    <!--    SinglePhoto-->
     <color name="title_background">#f5a907</color>
 </resources>
