@@ -41,6 +41,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         app:itemBackground="@color/bottomNavBackground"
+        android:background="@color/bottomNavBackground"
         app:itemIconTint="@color/checked_selector"
         app:itemTextColor="@color/checked_selector"
         app:menu="@menu/bottom_menu"

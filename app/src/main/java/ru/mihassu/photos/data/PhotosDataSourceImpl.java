@@ -6,7 +6,11 @@ import java.util.Objects;
 
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+import ru.mihassu.photos.common.Logi;
+import ru.mihassu.photos.data.entity.Comment;
+import ru.mihassu.photos.data.entity.Comments;
 import ru.mihassu.photos.data.entity.SizeApi;
+import ru.mihassu.photos.domain.PhotoComment;
 import ru.mihassu.photos.domain.PhotoPage;
 import ru.mihassu.photos.domain.PhotoSize;
 import ru.mihassu.photos.network.FlickrApi;
@@ -16,12 +20,10 @@ public class PhotosDataSourceImpl implements PhotosDataSource {
     private final String GET_RECENT_METHOD = "flickr.photos.getRecent";
     private final String SEARCH_METHOD = "flickr.photos.search";
     private final String GET_SIZES_METHOD = "flickr.photos.getSizes";
+    private final String GET_COMMENTS_METHOD = "flickr.photos.comments.getList";
     private final String API_KEY = "37ffb3155aa34e0e22081fc94dbabe2e";
-    private final int PER_PAGE = 30;
-    private final int PAGE = 1;
     private final String JSON_FORMAT = "json";
     private final int NO_JSON_CALLBACK = 1;
-
     private FlickrApi flickrApi;
 
     public PhotosDataSourceImpl(FlickrApi flickrApi) {
@@ -54,5 +56,23 @@ public class PhotosDataSourceImpl implements PhotosDataSource {
                     }
                     return sizesList;
                 });
+    }
+
+    @Override
+    public Single<List<PhotoComment>> getPhotoComments(String photoId) {
+
+        return flickrApi
+                .getComments(GET_COMMENTS_METHOD, API_KEY, photoId, JSON_FORMAT, NO_JSON_CALLBACK)
+                .map(commentsResponse -> {
+                    List<PhotoComment> commentsList = new ArrayList<>();
+                    if (commentsResponse.getComments().getComment() != null) {
+                        for (Comment comments: Objects.requireNonNull(commentsResponse.getComments().getComment())) {
+                            commentsList.add(new PhotoComment(comments.getId(), comments.getAuthorname(), comments.getContent()));
+                        }
+                    }
+                    return commentsList;
+                });
+
+
     }
 }

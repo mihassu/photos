@@ -3,6 +3,7 @@ package ru.mihassu.photos.data;
 import java.util.List;
 
 import io.reactivex.Single;
+import ru.mihassu.photos.domain.PhotoComment;
 import ru.mihassu.photos.domain.PhotoPage;
 import ru.mihassu.photos.domain.PhotoSize;
 import ru.mihassu.photos.repository.PhotosRepository;
@@ -30,6 +31,10 @@ public class PhotosRepositoryImpl implements PhotosRepository {
         return photosDataSource.getPhotoSizes(photoId);
     }
 
+    @Override
+    public Single<List<PhotoComment>> getPhotoComments(String photoId) {
+        return photosDataSource.getPhotoComments(photoId);
+    }
 
     //    private final String GET_RECENT_METHOD = "flickr.photos.getRecent";
 //    private final String SEARCH_METHOD = "flickr.photos.search";

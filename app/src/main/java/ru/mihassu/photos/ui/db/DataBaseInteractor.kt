@@ -6,11 +6,6 @@ import ru.mihassu.photos.domain.Photo
 
 interface DataBaseInteractor {
 
-//    companion object {
-//        const val PHOTO_ADDED = 1
-//        const val PHOTO_DELETED = 2
-//    }
-
     fun addToFavoritesBase(photo: Photo) : Single<Boolean>
 //    fun deleteFromFavoritesBase(photo: Photo) : Completable
     fun getAllFromFavoritesBase() : Single<List<Photo>>

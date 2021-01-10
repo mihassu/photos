@@ -4,6 +4,7 @@ import io.reactivex.Single;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import ru.mihassu.photos.data.entity.ApiPhotosResult;
+import ru.mihassu.photos.data.entity.CommentsResponse;
 import ru.mihassu.photos.data.entity.SizesResultApi;
 
 public interface FlickrApi {
@@ -31,4 +32,11 @@ public interface FlickrApi {
                                     @Query("photo_id") String photoId,
                                     @Query("format") String format,
                                     @Query("nojsoncallback") int n);
+
+    @GET("services/rest/")
+    Single<CommentsResponse> getComments(@Query("method")String method,
+                                         @Query("api_key")String apiKey,
+                                         @Query("photo_id") String photoId,
+                                         @Query("format") String format,
+                                         @Query("nojsoncallback") int n);
 }

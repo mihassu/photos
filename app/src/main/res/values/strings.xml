@@ -5,5 +5,7 @@
     <string name="photos_fragment">Фото</string>
     <string name="view_photo_fragment">Просмотр</string>
     <string name="favorite_label">Избранное</string>
+    <string name="comments">Комментарии</string>
+    <string name="no_comments">Нет комментариев</string>
 
 </resources>

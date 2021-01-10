@@ -4,7 +4,13 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 
-data class Photo(val id: Long, val title: String, val url: String, val sizes: List<PhotoSize> = listOf()) {
+data class Photo(
+        val id: Long,
+        val title: String,
+        val url: String,
+        val sizes: List<PhotoSize> = listOf(),
+        val comments: List<PhotoComment> = listOf()
+) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
