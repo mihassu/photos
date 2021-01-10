@@ -1,6 +1,7 @@
 package ru.mihassu.photos.ui.fragments.search
 
 import android.os.Bundle
+import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,7 @@ import ru.mihassu.photos.ui.fragments.common.PhotosCallback
 import ru.mihassu.photos.ui.fragments.common.PhotosRecyclerView
 import ru.mihassu.photos.ui.fragments.common.RecyclerViewEvents
 import ru.mihassu.photos.ui.fragments.common.RvScrollListener
+import ru.mihassu.photos.util.hideKeyboard
 import javax.inject.Inject
 
 class SearchFragment : Fragment() {
@@ -141,6 +143,8 @@ class SearchFragment : Fragment() {
         if (searchField.text.toString().isNotEmpty()) {
             viewModel.clearDataList()
             viewModel.initLoad(searchField.text.toString(), PER_PAGE)
+            searchField.clearFocus()
+            hideKeyboard(requireContext(), searchField.windowToken)
         }
     }
 
