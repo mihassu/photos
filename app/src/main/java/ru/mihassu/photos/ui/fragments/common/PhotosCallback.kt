@@ -1,4 +1,4 @@
-package ru.mihassu.photos.ui.fragments.photos
+package ru.mihassu.photos.ui.fragments.common
 
 import ru.mihassu.photos.domain.Photo
 
@@ -7,4 +7,5 @@ sealed class PhotosCallback {
 //    object FavoriteAdded : PhotosCallback()
 //    object FavoriteDeleted : PhotosCallback()
     class PhotosError(val th: Throwable) : PhotosCallback()
+    object PhotosEmpty : PhotosCallback()
 }

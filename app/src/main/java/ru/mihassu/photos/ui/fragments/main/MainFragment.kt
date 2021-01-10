@@ -77,7 +77,7 @@ class MainFragment : Fragment() {
     }
 
     private fun setupBottomNavigationBar() {
-        val navGraphsIds: List<Int> = listOf(R.navigation.photos_navigation, R.navigation.favorites_navigation)
+        val navGraphsIds: List<Int> = listOf(R.navigation.photos_navigation, R.navigation.search_navigation, R.navigation.favorites_navigation)
         val controllerLiveData = bottomNavigationView.setupWithNavController(
                 navGraphsIds,
                 requireActivity().supportFragmentManager,

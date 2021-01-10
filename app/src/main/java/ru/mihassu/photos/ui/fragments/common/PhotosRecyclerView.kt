@@ -1,4 +1,4 @@
-package ru.mihassu.photos.ui.fragments.photos
+package ru.mihassu.photos.ui.fragments.common
 
 import android.content.Context
 import android.util.AttributeSet

@@ -40,7 +40,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:src="@drawable/ic_baseline_arrow_forward_ios_24"
-            android:background="@android:color/transparent"
+            android:background="@color/button_touch_selector"
             android:rotation="-90"/>
 
         <ImageButton
