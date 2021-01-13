@@ -26,7 +26,7 @@ data class Photo(
     }
 
     override fun toString(): String {
-        return "Photo {id: $id ,url: $url}"
+        return "\nPhoto id: $id\ntitle: $title\n url: $url\nsizes: ${sizes.size}\n"
     }
 
     fun getMaxSizeUrl() : String {

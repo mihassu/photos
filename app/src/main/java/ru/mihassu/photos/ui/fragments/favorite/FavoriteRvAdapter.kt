@@ -4,18 +4,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import ru.mihassu.photos.R
 import ru.mihassu.photos.domain.Photo
-import ru.mihassu.photos.ui.custom.FitWidthTransformation
 
 class FavoriteRvAdapter(private val picasso: Picasso)
-    : RecyclerView.Adapter<FavoriteRvAdapter.FavoritesViewHolder>() {
+    : RecyclerView.Adapter<FavoriteRvAdapter.FavoritesViewHolder>(), IFavoriteTouchAdapter {
 
     private var dataList: List<Photo> = listOf()
-    private var onPhotoClickListener: OnPhotoClickListener? = null
+    private var adapterEventListener: AdapterEventListener? = null
     private var rvWidth: Int = 100
 
 
@@ -47,24 +45,29 @@ class FavoriteRvAdapter(private val picasso: Picasso)
                     .load(dataList[pos].getLargeSizeUrl())
 //                    .transform(FitWidthTransformation(rvWidth))
                     .placeholder(R.drawable.placeholder_favorites)
-//                    .error(R.drawable.placeholder_test)
+                    .error(R.drawable.placeholder_error)
                     .resize(1080, 1296)
                     .centerCrop()
                     .into(photoField)
-            itemView.setOnClickListener { v: View? -> onPhotoClickListener!!.onPhotoClick(dataList[pos]) }
+            itemView.setOnClickListener { v: View? ->
+                adapterEventListener?.onEvent(FavoriteAdaptedEvent.Click(dataList[pos])) }
         }
     }
 
-    interface OnPhotoClickListener {
-        fun onPhotoClick(photo: Photo)
+    interface AdapterEventListener {
+        fun onEvent(event: FavoriteAdaptedEvent)
     }
 
-    fun setOnPhotoClickListener(onPhotoClickListener: OnPhotoClickListener?) {
-        this.onPhotoClickListener = onPhotoClickListener
+    fun setAdapterEventListener(adapterEventListener: AdapterEventListener?) {
+        this.adapterEventListener = adapterEventListener
     }
 
     fun setRvWidth(width: Int) {
         this.rvWidth = width
     }
 
+    //Вызывается при смахивании
+    override fun onItemDismiss(position: Int) {
+        adapterEventListener?.onEvent(FavoriteAdaptedEvent.Swipe(dataList[position]))
+    }
 }

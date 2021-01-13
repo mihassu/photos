@@ -5,44 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    android:orientation="vertical">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:elevation="2dp"
-        android:alpha="0.95"
-        android:layout_margin="20dp"
-        android:background="@drawable/bnv_border_round">
-
-        <EditText
-            android:id="@+id/et_search_field"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:maxLines="1"
-            android:textColor="@color/colorAccent"
-            app:layout_constraintEnd_toStartOf="@id/search_button"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/search_button"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            style="?attr/borderlessButtonStyle"
-            android:textColor="@color/colorAccent"
-            app:layout_constraintStart_toEndOf="@id/et_search_field"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:text="@string/search"
-            />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
@@ -53,17 +16,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <ru.mihassu.photos.ui.fragments.photos.PhotosRecyclerView
+        <ru.mihassu.photos.ui.fragments.common.PhotosRecyclerView
             android:id="@+id/rv_photos_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/item_photo"
             tools:itemCount="4">
 
-        </ru.mihassu.photos.ui.fragments.photos.PhotosRecyclerView>
+        </ru.mihassu.photos.ui.fragments.common.PhotosRecyclerView>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
 
 
     <ProgressBar

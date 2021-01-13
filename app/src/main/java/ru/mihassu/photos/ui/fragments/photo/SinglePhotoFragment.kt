@@ -8,6 +8,7 @@ import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -122,6 +123,10 @@ class SinglePhotoFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             commentsRvAdapter = CommentsRvAdapter()
             adapter = commentsRvAdapter
+            val divider = DividerItemDecoration(requireContext(), RecyclerView.VERTICAL).apply {
+                setDrawable(resources.getDrawable(R.drawable.item_divider, null))
+            }
+            addItemDecoration(divider)
         }
     }
 

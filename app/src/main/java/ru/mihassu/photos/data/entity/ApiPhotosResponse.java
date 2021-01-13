@@ -3,7 +3,7 @@ package ru.mihassu.photos.data.entity;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ApiPhotosResult {
+public class ApiPhotosResponse {
 
     @SerializedName("photos")
     @Expose

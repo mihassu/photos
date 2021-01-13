@@ -6,7 +6,7 @@ import ru.mihassu.photos.domain.Photo
 
 interface DataBaseInteractor {
 
-    fun addToFavoritesBase(photo: Photo) : Single<Boolean>
+    fun toggleFavoritesInBase(photo: Photo) : Single<Boolean>
 //    fun deleteFromFavoritesBase(photo: Photo) : Completable
     fun getAllFromFavoritesBase() : Single<List<Photo>>
     fun isPhotoFavorite(photo: Photo): Single<Boolean>

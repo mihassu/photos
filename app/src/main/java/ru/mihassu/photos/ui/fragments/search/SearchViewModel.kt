@@ -1,4 +1,4 @@
-package ru.mihassu.photos.ui.fragments.photos
+package ru.mihassu.photos.ui.fragments.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +13,7 @@ import ru.mihassu.photos.interactor.SearchInteractor
 import ru.mihassu.photos.ui.db.DataBaseInteractor
 import ru.mihassu.photos.ui.fragments.common.PhotosCallback
 
-class PhotosViewModel(private val searchInteractor: SearchInteractor, private val dbInteractor: DataBaseInteractor) : ViewModel() {
+class SearchViewModel(private val searchInteractor: SearchInteractor, private val dbInteractor: DataBaseInteractor) : ViewModel() {
 
     companion object {
         const val FIRST_PAGE = 1
@@ -55,6 +55,7 @@ class PhotosViewModel(private val searchInteractor: SearchInteractor, private va
     }
 
     fun initLoad(query: String, perPage: Int) {
+//        dbInteractor.clearCacheBase()
         if (!isFirstQuery) { return }
         isFirstQuery = false
         currentQuery = query

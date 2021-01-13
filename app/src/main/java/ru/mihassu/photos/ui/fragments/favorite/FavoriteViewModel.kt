@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import ru.mihassu.photos.common.Logi
 import ru.mihassu.photos.domain.Photo
 import ru.mihassu.photos.ui.db.DataBaseInteractor
 
@@ -25,9 +26,21 @@ class FavoriteViewModel(private val dbInteractor: DataBaseInteractor) : ViewMode
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe ({ photos ->
                     dataList = photos
+                            .apply { onEach { photo -> Logi.logIt(photo.toString()) }}
                     favoritesLiveData.value = dataList
                 },
                         {th -> }).apply { disposables.add(this) }
+    }
+
+    fun toggleFavorite(photo: Photo) {
+        dbInteractor.toggleFavoritesInBase(photo)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { isDeleted ->
+                    if (!isDeleted) {
+                        getFavorites()
+                    }
+                }.apply { disposables.add(this) }
     }
 
     override fun onCleared() {

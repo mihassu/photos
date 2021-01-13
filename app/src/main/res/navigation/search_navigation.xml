@@ -2,17 +2,17 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/photos"
-    app:startDestination="@id/photos_fragment_nav">
+    android:id="@+id/search"
+    app:startDestination="@id/search_fragment_nav">
 
     <fragment
-        android:id="@+id/photos_fragment_nav"
-        android:name="ru.mihassu.photos.ui.fragments.photos.PhotosFragment"
-        android:label="@string/photos_fragment_label"
-        tools:layout="@layout/fragment_photos">
+        android:id="@+id/search_fragment_nav"
+        android:name="ru.mihassu.photos.ui.fragments.search.SearchFragment"
+        android:label="@string/search_fragment_label"
+        tools:layout="@layout/fragment_search">
 
         <action
-            android:id="@+id/action_photos_to_single_photo"
+            android:id="@+id/action_search_to_single_photo"
             app:destination="@id/single_photo_fragment_nav"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim" />

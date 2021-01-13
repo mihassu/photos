@@ -43,23 +43,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun initViews() {
         bottomNavigationView = findViewById(R.id.bottom_navigation)
-        bottomNavigationView.setOnNavigationItemSelectedListener (BottomNavigationView.OnNavigationItemSelectedListener { item ->
-            when(item.itemId) {
-                R.id.photos_fragment_nav -> {
-                    if (navController.currentDestination?.id != R.id.photos_fragment_nav) {
-                        navController.navigate(R.id.action_favorite_to_photos)
-                        true
-                    } else false
-                }
-                R.id.favorite_fragment_nav -> {
-                    if (navController.currentDestination?.id != R.id.favorite_fragment_nav) {
-                        navController.navigate(R.id.action_photos_to_favorite)
-                        true
-                    } else false
-                }
-                else -> false
-            }
-        } )
     }
 
     override fun onDestroy() {

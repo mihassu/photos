@@ -24,7 +24,8 @@
             android:id="@+id/tv_comment_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Comment content"/>
+            tools:text="Comment content"
+            android:autoLink="web|email"/>
 
     </LinearLayout>
 

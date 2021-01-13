@@ -36,6 +36,11 @@ public class PhotosRepositoryImpl implements PhotosRepository {
         return photosDataSource.getPhotoComments(photoId);
     }
 
+    @Override
+    public Single<PhotoPage> getInterestingPhotos(String date, int pageNumber, int perPage) {
+        return photosDataSource.getInterestingPhotos(date, pageNumber, perPage);
+    }
+
     //    private final String GET_RECENT_METHOD = "flickr.photos.getRecent";
 //    private final String SEARCH_METHOD = "flickr.photos.search";
 //    private final String API_KEY = "37ffb3155aa34e0e22081fc94dbabe2e";

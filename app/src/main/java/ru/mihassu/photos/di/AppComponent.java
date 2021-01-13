@@ -9,6 +9,7 @@ import ru.mihassu.photos.ui.MainActivity;
 import ru.mihassu.photos.ui.fragments.favorite.FavoriteFragment;
 import ru.mihassu.photos.ui.fragments.photo.SinglePhotoFragment;
 import ru.mihassu.photos.ui.fragments.photos.PhotosFragment;
+import ru.mihassu.photos.ui.fragments.search.SearchFragment;
 
 @Component (modules = {RepositoryModule.class, PicassoModule.class, RoomModule.class})
 @AppScope
@@ -22,4 +23,6 @@ public interface AppComponent {
     void inject(PhotosFragment photosFragment);
     void inject(FavoriteFragment favoriteFragment);
     void inject(SinglePhotoFragment singlePhotoFragment);
+    void inject(SearchFragment searchFragment);
+
 }

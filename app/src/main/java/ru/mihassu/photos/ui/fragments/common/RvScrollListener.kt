@@ -1,8 +1,7 @@
-package ru.mihassu.photos.ui.fragments.photos
+package ru.mihassu.photos.ui.fragments.common
 
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import io.reactivex.subjects.PublishSubject
 import ru.mihassu.photos.common.Logi
 
 class RvScrollListener(recyclerView: RecyclerView, private val onScroll: (Int) -> Unit) : RecyclerView.OnScrollListener() {

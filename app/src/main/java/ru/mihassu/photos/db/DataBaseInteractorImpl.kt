@@ -21,7 +21,7 @@ class DataBaseInteractorImpl(db: AppDataBase) : DataBaseInteractor {
 //    }
 
     /*FavoritesBase*/
-    override fun addToFavoritesBase(photo: Photo): Single<Boolean> = Single.create { emitter ->
+    override fun toggleFavoritesInBase(photo: Photo): Single<Boolean> = Single.create { emitter ->
         if (!isContainPhoto(photo)) {
             try {
                 favoriteDao.insert(photo.toDbEntity())

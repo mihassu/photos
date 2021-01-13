@@ -5,12 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import ru.mihassu.photos.common.Logi
 import ru.mihassu.photos.domain.Photo
-import ru.mihassu.photos.domain.PhotoComment
-import ru.mihassu.photos.domain.PhotoSize
 import ru.mihassu.photos.repository.PhotosRepository
 import ru.mihassu.photos.ui.db.DataBaseInteractor
 
@@ -42,7 +39,7 @@ class SinglePhotoViewModel(private val photosRepository: PhotosRepository, priva
     }
 
     fun addFavoritePhoto(photo: Photo) {
-        dbInteractor.addToFavoritesBase(photo)
+        dbInteractor.toggleFavoritesInBase(photo)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ isFavorite ->

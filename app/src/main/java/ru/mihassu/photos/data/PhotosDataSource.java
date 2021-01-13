@@ -12,4 +12,6 @@ public interface PhotosDataSource {
     Single<PhotoPage> search(String query, int pageNumber, int perPage);
     Single<List<PhotoSize>> getPhotoSizes(String photoId);
     Single<List<PhotoComment>> getPhotoComments(String photoId);
+    Single<PhotoPage> getInterestingPhotos(String date, int pageNumber, int perPage);
+
 }
