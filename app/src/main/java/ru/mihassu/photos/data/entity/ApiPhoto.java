@@ -29,6 +29,19 @@ public class ApiPhoto {
     @Expose
     private String title;
 
+    @SerializedName("ispublic")
+    @Expose
+    private Integer ispublic;
+
+    @SerializedName("isfriend")
+    @Expose
+    private Integer isfriend;
+
+    @SerializedName("isfamily")
+    @Expose
+    private Integer isfamily;
+
+
     public long getId() {
         return id;
     }
@@ -51,5 +64,17 @@ public class ApiPhoto {
 
     public String getTitle() {
         return title;
+    }
+
+    public Integer getIspublic() {
+        return ispublic;
+    }
+
+    public Integer getIsfriend() {
+        return isfriend;
+    }
+
+    public Integer getIsfamily() {
+        return isfamily;
     }
 }

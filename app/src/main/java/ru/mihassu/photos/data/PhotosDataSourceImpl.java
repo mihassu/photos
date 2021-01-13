@@ -21,6 +21,7 @@ public class PhotosDataSourceImpl implements PhotosDataSource {
     private final String SEARCH_METHOD = "flickr.photos.search";
     private final String GET_SIZES_METHOD = "flickr.photos.getSizes";
     private final String GET_COMMENTS_METHOD = "flickr.photos.comments.getList";
+    private final String GET_INTERESTING_METHOD = "flickr.interestingness.getList";
     private final String API_KEY = "37ffb3155aa34e0e22081fc94dbabe2e";
     private final String JSON_FORMAT = "json";
     private final int NO_JSON_CALLBACK = 1;
@@ -74,5 +75,13 @@ public class PhotosDataSourceImpl implements PhotosDataSource {
                 });
 
 
+    }
+
+    @Override
+    public Single<PhotoPage> getInterestingPhotos(String date, int pageNumber, int perPage) {
+        return flickrApi
+                .getInterestingPhotos(GET_RECENT_METHOD, API_KEY, date, perPage, pageNumber, JSON_FORMAT, NO_JSON_CALLBACK)
+                .map(PhotosMapper::mapInterest)
+                .subscribeOn(Schedulers.io());
     }
 }

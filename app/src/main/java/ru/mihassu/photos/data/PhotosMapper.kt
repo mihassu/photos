@@ -1,19 +1,30 @@
 package ru.mihassu.photos.data
 
-import ru.mihassu.photos.data.entity.ApiPhotosResult
+import ru.mihassu.photos.data.entity.ApiPhotosResponse
+import ru.mihassu.photos.data.entity.InterestResponse
 import ru.mihassu.photos.domain.Photo
 import ru.mihassu.photos.domain.PhotoPage
 import java.util.*
 
 object PhotosMapper {
     @JvmStatic
-    fun map(apiResult: ApiPhotosResult): PhotoPage {
+    fun map(apiResponse: ApiPhotosResponse): PhotoPage {
         val photoList: MutableList<Photo> = ArrayList()
-        for (photo in apiResult.photos.photosList!!) {
+        for (photo in apiResponse.photos.photosList!!) {
             val url = getUrl(photo.farm, photo.server, photo.id, photo.secret)
             photoList.add(Photo(photo.id, photo.title, url))
         }
-        return PhotoPage(photoList, apiResult.photos.total, apiResult.photos.page, apiResult.photos.pages)
+        return PhotoPage(photoList, apiResponse.photos.total, apiResponse.photos.page, apiResponse.photos.pages)
+    }
+
+    @JvmStatic
+    fun mapInterest(interestResponse: InterestResponse): PhotoPage {
+        val photoList: MutableList<Photo> = ArrayList()
+        for (photo in interestResponse.photos.photosList!!) {
+            val url = getUrl(photo.farm, photo.server, photo.id, photo.secret)
+            photoList.add(Photo(photo.id, photo.title, url))
+        }
+        return PhotoPage(photoList, interestResponse.photos.total, interestResponse.photos.page, interestResponse.photos.pages)
     }
 
     private fun getUrl(farm: Long, server: Long, id: Long, secret: String): String {

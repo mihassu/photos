@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
@@ -31,7 +31,7 @@ class FavoriteFragment : Fragment() {
     }
 
     private lateinit var viewModel: FavoriteViewModel
-    private lateinit var adapter : FavoriteRvAdapter
+    private lateinit var rvAdapter : FavoriteRvAdapter
 //    private lateinit var navController: NavController
 
 
@@ -52,7 +52,7 @@ class FavoriteFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 //        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         viewModel.getPhotosLiveData().observe(viewLifecycleOwner, { photos: List<Photo> ->
-            adapter.setDataList(photos)
+            rvAdapter.setDataList(photos)
         } )
     }
 
@@ -62,21 +62,29 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun initRecyclerView(v: View) {
-        val rv = v.findViewById<RecyclerView>(R.id.rv_favorites)
+        val favoritesRv = v.findViewById<RecyclerView>(R.id.rv_favorites)
         val lm = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        adapter = FavoriteRvAdapter(picasso)
-        adapter.setOnPhotoClickListener(object : FavoriteRvAdapter.OnPhotoClickListener{
-            override fun onPhotoClick(photo: Photo) {
-                openSinglePhoto(photo)
+        rvAdapter = FavoriteRvAdapter(picasso)
+        rvAdapter.setAdapterEventListener(object : FavoriteRvAdapter.AdapterEventListener{
+            override fun onEvent(event: FavoriteAdaptedEvent) {
+                when(event) {
+                    is FavoriteAdaptedEvent.Click -> openSinglePhoto(event.photo)
+                    is FavoriteAdaptedEvent.Swipe -> viewModel.toggleFavorite(event.photo) // через dialog
+                }
             }
         })
-        val rvWidth = rv.layoutParams.width
-        val rvWidth1 = rv.width
-        val rvWidth2 = rv.measuredWidth
 
-        adapter.setRvWidth(rvWidth)
-        rv.layoutManager = lm
-        rv.adapter = adapter
+        val favoriteTouchCallback = FavoriteTouchCallback(rvAdapter)
+        val itemTouchHelper = ItemTouchHelper(favoriteTouchCallback)
+        itemTouchHelper.attachToRecyclerView(favoritesRv)
+
+        val rvWidth = favoritesRv.layoutParams.width
+        val rvWidth1 = favoritesRv.width
+        val rvWidth2 = favoritesRv.measuredWidth
+        rvAdapter.setRvWidth(rvWidth)
+
+        favoritesRv.layoutManager = lm
+        favoritesRv.adapter = rvAdapter
     }
 
     private fun openSinglePhoto(photo: Photo) {
