@@ -11,9 +11,12 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import ru.mihassu.photos.App
 import ru.mihassu.photos.R
 import ru.mihassu.photos.common.Constants
+import ru.mihassu.photos.common.Logi
 import ru.mihassu.photos.domain.Photo
 import ru.mihassu.photos.ui.db.DataBaseInteractor
 import javax.inject.Inject
@@ -32,6 +35,8 @@ class FavoriteFragment : Fragment() {
 
     private lateinit var viewModel: FavoriteViewModel
     private lateinit var rvAdapter : FavoriteRvAdapter
+    private val disposables = CompositeDisposable()
+
 //    private lateinit var navController: NavController
 
 
@@ -44,7 +49,6 @@ class FavoriteFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_favorite, container, false)
-        initRecyclerView(v)
         return v
     }
 
@@ -54,6 +58,11 @@ class FavoriteFragment : Fragment() {
         viewModel.getPhotosLiveData().observe(viewLifecycleOwner, { photos: List<Photo> ->
             rvAdapter.setDataList(photos)
         } )
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initRecyclerView(view)
     }
 
     override fun onResume() {
@@ -88,10 +97,18 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun openSinglePhoto(photo: Photo) {
-        val bundle = Bundle()
-        bundle.putLong(Constants.PHOTO_ID_EXTRA, photo.id)
-        Navigation.findNavController(requireView()).navigate(R.id.action_favorites_to_single_photo, bundle)
-//        navController.navigate(R.id.action_to_single_photo_fragment, bundle)
+        viewModel.addToCache(photo)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    val bundle = Bundle()
+                    bundle.putLong(Constants.PHOTO_ID_EXTRA, photo.id)
+                    Navigation.findNavController(requireView()).navigate(R.id.action_favorites_to_single_photo, bundle)
+                }, {th -> Logi.logIt("Add to cache ERROR: ${th.message}")})
+                .apply { disposables.add(this) }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.dispose()
+    }
  }

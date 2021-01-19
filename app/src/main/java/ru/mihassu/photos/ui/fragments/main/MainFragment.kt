@@ -30,7 +30,6 @@ class MainFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_main, container, false)
-        initViews(v)
         return v
     }
 
@@ -44,6 +43,7 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initViews(view)
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
         }
@@ -77,7 +77,12 @@ class MainFragment : Fragment() {
     }
 
     private fun setupBottomNavigationBar() {
-        val navGraphsIds: List<Int> = listOf(R.navigation.photos_navigation, R.navigation.search_navigation, R.navigation.favorites_navigation)
+        val navGraphsIds: List<Int> = listOf(
+                R.navigation.photos_navigation,
+                R.navigation.interest_navigation,
+                R.navigation.search_navigation,
+                R.navigation.favorites_navigation
+        )
         val controllerLiveData = bottomNavigationView.setupWithNavController(
                 navGraphsIds,
                 requireActivity().supportFragmentManager,

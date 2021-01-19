@@ -9,6 +9,7 @@ public class InterestExtra {
     @SerializedName("explore_date")
     @Expose
     private String exploreDate;
+    
     @SerializedName("next_prelude_interval")
     @Expose
     private String nextPreludeInterval;

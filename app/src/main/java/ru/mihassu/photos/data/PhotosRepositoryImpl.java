@@ -10,7 +10,7 @@ import ru.mihassu.photos.repository.PhotosRepository;
 
 public class PhotosRepositoryImpl implements PhotosRepository {
 
-    private PhotosDataSource photosDataSource;
+    private final PhotosDataSource photosDataSource;
 
     public PhotosRepositoryImpl(PhotosDataSource photosDataSource) {
         this.photosDataSource = photosDataSource;

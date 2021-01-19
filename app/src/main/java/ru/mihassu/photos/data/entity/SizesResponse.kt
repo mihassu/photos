@@ -4,7 +4,12 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 class SizesResponse {
+
         @SerializedName("sizes")
         @Expose
-        lateinit var sizes: SizesApi
+        var sizes: SizesApi? = null
+
+        @SerializedName("stat")
+        @Expose
+        private val stat: String? = null
 }

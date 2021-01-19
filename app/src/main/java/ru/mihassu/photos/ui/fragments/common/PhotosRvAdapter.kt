@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import ru.mihassu.photos.R
@@ -19,12 +20,10 @@ class PhotosRvAdapter(private val picasso: Picasso, private val loadMoreRequest:
 
 
     fun setDataList(data: List<Photo>) {
-//        for (i in data) {
-//            dataList.add(i)
-//        }
-//        notifyItemRangeInserted(lastItemPosition, data.size)
+        val photosDiffUtil = PhotosDiffUtil(dataList, data)
+        val diffResult = DiffUtil.calculateDiff(photosDiffUtil)
         dataList = data.toMutableList()
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotosListViewHolder {
@@ -38,8 +37,6 @@ class PhotosRvAdapter(private val picasso: Picasso, private val loadMoreRequest:
             loadMoreRequest.invoke()
         }
     }
-
-
 
     override fun getItemCount(): Int = dataList.size
 

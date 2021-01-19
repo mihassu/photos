@@ -7,6 +7,12 @@
         android:title="@string/photos_item"/>
 
     <item
+        android:id="@+id/interest"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_image_24"
+        android:title="@string/interest_item"/>
+
+    <item
         android:id="@+id/search"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_image_search_24"

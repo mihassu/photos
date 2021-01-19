@@ -7,5 +7,5 @@ sealed class PhotosCallback {
 //    object FavoriteAdded : PhotosCallback()
 //    object FavoriteDeleted : PhotosCallback()
     class PhotosError(val th: Throwable) : PhotosCallback()
-    object PhotosEmpty : PhotosCallback()
+    class PhotosEmpty(val photos: List<Photo>) : PhotosCallback()
 }
