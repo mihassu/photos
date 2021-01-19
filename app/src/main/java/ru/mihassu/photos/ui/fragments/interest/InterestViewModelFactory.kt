@@ -1,4 +1,4 @@
-package ru.mihassu.photos.ui.fragments.search
+package ru.mihassu.photos.ui.fragments.interest
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
@@ -7,12 +7,12 @@ import ru.mihassu.photos.repository.PhotosRepository
 import ru.mihassu.photos.ui.db.DataBaseInteractor
 import ru.mihassu.photos.ui.fragments.search.SearchViewModel
 
-class SearchViewModelFactory(private val photosRepository: PhotosRepository, private val dataBaseInteractor: DataBaseInteractor) : NewInstanceFactory() {
+class InterestViewModelFactory(private val photosRepository: PhotosRepository, private val dataBaseInteractor: DataBaseInteractor) : NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
 
         return when (modelClass) {
-            SearchViewModel::class.java -> SearchViewModel(photosRepository, dataBaseInteractor) as T
+            InterestViewModel::class.java -> InterestViewModel(photosRepository, dataBaseInteractor) as T
             else -> null
         }!!
     }

@@ -7,6 +7,7 @@ import ru.mihassu.photos.presenter.PhotosPresenter;
 import ru.mihassu.photos.repository.PhotosRepository;
 import ru.mihassu.photos.ui.MainActivity;
 import ru.mihassu.photos.ui.fragments.favorite.FavoriteFragment;
+import ru.mihassu.photos.ui.fragments.interest.InterestFragment;
 import ru.mihassu.photos.ui.fragments.photo.SinglePhotoFragment;
 import ru.mihassu.photos.ui.fragments.photos.PhotosFragment;
 import ru.mihassu.photos.ui.fragments.search.SearchFragment;
@@ -24,5 +25,6 @@ public interface AppComponent {
     void inject(FavoriteFragment favoriteFragment);
     void inject(SinglePhotoFragment singlePhotoFragment);
     void inject(SearchFragment searchFragment);
+    void inject(InterestFragment searchFragment);
 
 }

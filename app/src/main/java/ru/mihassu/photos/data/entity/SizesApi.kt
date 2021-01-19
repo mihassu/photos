@@ -18,5 +18,5 @@ class SizesApi {
 
         @SerializedName("size")
         @Expose
-        lateinit var sizesList: ArrayList<SizeApi>
+        var sizesList: List<SizeApi>? = null
 }

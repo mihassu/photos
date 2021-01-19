@@ -4,10 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import ru.mihassu.photos.R
 import ru.mihassu.photos.domain.Photo
+import ru.mihassu.photos.ui.fragments.common.PhotosDiffUtil
 
 class FavoriteRvAdapter(private val picasso: Picasso)
     : RecyclerView.Adapter<FavoriteRvAdapter.FavoritesViewHolder>(), IFavoriteTouchAdapter {
@@ -18,8 +20,13 @@ class FavoriteRvAdapter(private val picasso: Picasso)
 
 
     fun setDataList(data: List<Photo>) {
+        val photosDiffUtil = PhotosDiffUtil(dataList, data)
+        val diffResult = DiffUtil.calculateDiff(photosDiffUtil)
         dataList = data
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
+
+//        dataList = data
+//        notifyDataSetChanged()
     }
 
 

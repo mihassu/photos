@@ -8,13 +8,9 @@ import ru.mihassu.photos.repository.PhotosRepository;
 public class SearchInteractorImpl implements SearchInteractor {
 
     private PhotosRepository photosRepository;
-//    private int pageNumber;
-//    private int totalPages;
 
     public SearchInteractorImpl(PhotosRepository photosRepository) {
         this.photosRepository = photosRepository;
-//        pageNumber = 0;
-//        totalPages = 10;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package ru.mihassu.photos.ui.fragments;
+package ru.mihassu.photos.ui.paging;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
@@ -9,7 +9,6 @@ import androidx.paging.PagedList;
 
 import io.reactivex.disposables.CompositeDisposable;
 import ru.mihassu.photos.domain.Photo;
-import ru.mihassu.photos.ui.paging.PhotosPositionalDataSourceFactory;
 
 public class PhotosFragmentViewModelPaging extends ViewModel {
 

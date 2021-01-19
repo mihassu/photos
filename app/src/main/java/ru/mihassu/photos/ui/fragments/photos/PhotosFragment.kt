@@ -1,19 +1,20 @@
 package ru.mihassu.photos.ui.fragments.photos
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 import ru.mihassu.photos.App
@@ -22,6 +23,7 @@ import ru.mihassu.photos.common.Constants
 import ru.mihassu.photos.common.Logi
 import ru.mihassu.photos.domain.Photo
 import ru.mihassu.photos.interactor.SearchInteractor
+import ru.mihassu.photos.repository.PhotosRepository
 import ru.mihassu.photos.ui.animation.MyAnimator
 import ru.mihassu.photos.ui.db.DataBaseInteractor
 import ru.mihassu.photos.ui.fragments.common.PhotosCallback
@@ -39,10 +41,12 @@ class PhotosFragment : Fragment() //extends MvpAppCompatFragment implements IPho
 
     @Inject
     lateinit var picasso: Picasso
-    @Inject
-    lateinit var searchInteractor: SearchInteractor
+//    @Inject
+//    lateinit var searchInteractor: SearchInteractor
     @Inject
     lateinit var dbInteractor: DataBaseInteractor
+    @Inject
+    lateinit var photosRepository: PhotosRepository
 
 //    private lateinit var searchField: EditText
 //    private lateinit var searchButton: Button
@@ -50,6 +54,8 @@ class PhotosFragment : Fragment() //extends MvpAppCompatFragment implements IPho
 //    private lateinit var searchLayout: ConstraintLayout
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var rvPhotos: PhotosRecyclerView
+    private lateinit var snackbar: Snackbar
+    private lateinit var photosFragmentContainer: ConstraintLayout
     //    @InjectPresenter
     //    PhotosPresenter mainPresenter;
 //    private lateinit var navController: NavController
@@ -64,15 +70,13 @@ class PhotosFragment : Fragment() //extends MvpAppCompatFragment implements IPho
         super.onCreate(savedInstanceState)
         val component = App.appComponent
         component.inject(this)
-        viewModel = ViewModelProvider(this, PhotosViewModelFactory(searchInteractor, dbInteractor))
+        viewModel = ViewModelProvider(this, PhotosViewModelFactory(photosRepository, dbInteractor))
                 .get(PhotosViewModel::class.java)
         //        Logi.logIt("PhotosFragment - onCreate()");
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_photos, container, false)
-        initRecyclerView(v)
-        initViews(v)
         //        Logi.logIt("PhotosFragment - onCreateView()");
         return v
     }
@@ -86,15 +90,22 @@ class PhotosFragment : Fragment() //extends MvpAppCompatFragment implements IPho
                     when (photosCallback) {
                         is PhotosCallback.PhotosLoaded -> showPhotos(photosCallback.photos)
                         is PhotosCallback.PhotosError -> { showToast(photosCallback.th.message.toString()); hideProgress() }
-                        is PhotosCallback.PhotosEmpty -> { showToast("No photos"); hideProgress() }
+                        is PhotosCallback.PhotosEmpty -> { showSnackBar(); showPhotos(photosCallback.photos) }
                     }
                 })
         //Logi.logIt("PhotosFragment - onActivityCreated()");
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initRecyclerView(view)
+        initViews(view)
+        initSnackbar(view,"Конец", "Вверх")
+    }
+
     override fun onResume() {
         super.onResume()
-        viewModel.initLoad("", PER_PAGE)
+        viewModel.initLoad(PER_PAGE)
 //        Logi.logIt("PhotosFragment - onResume()");
 //        mainPresenter.onFragmentResume(getActivity());
     }
@@ -108,6 +119,7 @@ class PhotosFragment : Fragment() //extends MvpAppCompatFragment implements IPho
 //        searchButton.setOnClickListener { startSearch() }
         swipeRefresh = v.findViewById(R.id.swipe_refresh)
         swipeRefresh.setOnRefreshListener { refresh() }
+        photosFragmentContainer = v.findViewById(R.id.fragment_photos_container)
     }
 
     private fun initRecyclerView(v: View) {
@@ -116,8 +128,8 @@ class PhotosFragment : Fragment() //extends MvpAppCompatFragment implements IPho
             override fun onNext(event: RecyclerViewEvents) {
                 when(event) {
                     is RecyclerViewEvents.LoadMoreEvent -> {
-                        viewModel.loading(PER_PAGE)
                         showProgress()
+                        viewModel.loading(PER_PAGE)
                     }
                     is RecyclerViewEvents.ScrollEvent ->
                         when (event.direction) {
@@ -143,11 +155,14 @@ class PhotosFragment : Fragment() //extends MvpAppCompatFragment implements IPho
     }
 
     private fun openSinglePhoto(photo: Photo) {
-        val bundle = Bundle()
-        bundle.putLong(Constants.PHOTO_ID_EXTRA, photo.id)
-//        bundle.putParcelable("photo", photo)
-        Navigation.findNavController(requireView()).navigate(R.id.action_photos_to_single_photo, bundle)
-//        navController.navigate(R.id.action_to_single_photo_fragment, bundle)
+        viewModel.addToCache(photo)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    val bundle = Bundle()
+                    bundle.putLong(Constants.PHOTO_ID_EXTRA, photo.id)
+                    Navigation.findNavController(requireView()).navigate(R.id.action_photos_to_single_photo, bundle)
+                }, {th -> Logi.logIt("Add to cache ERROR: ${th.message}")})
+                .apply { disposables.add(this) }
     }
 
 //    private fun startSearch() {
@@ -158,10 +173,10 @@ class PhotosFragment : Fragment() //extends MvpAppCompatFragment implements IPho
 //    }
 
     private fun refresh() {
-        viewModel.clearDataList()
-        viewModel.initLoad("", PER_PAGE)
-//        searchField.text.clear()
         showProgress()
+        viewModel.onRefresh()
+        viewModel.initLoad(PER_PAGE)
+//        searchField.text.clear()
     }
 
     private fun showProgress() {
@@ -188,7 +203,20 @@ class PhotosFragment : Fragment() //extends MvpAppCompatFragment implements IPho
 //    }
 
     private fun showToast(text: String) {
-        Toast.makeText(activity, text, Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), text, Toast.LENGTH_LONG).show()
+    }
+
+    private fun initSnackbar(v: View, text: String, actionText: String) {
+        snackbar = Snackbar.make(v.findViewById(R.id.fragment_photos_container), text, Snackbar.LENGTH_SHORT)
+                .setAnchorView(v.findViewById(R.id.snackbar_anchor_view))
+//                .apply {
+//                    val params = view.layoutParams as CoordinatorLayout.LayoutParams
+//                }
+                .setAction(actionText) { rvPhotos.scrollToPosition(0) }
+    }
+
+    private fun showSnackBar() {
+        snackbar.show()
     }
 
 

@@ -34,7 +34,7 @@ class RvScrollListener(recyclerView: RecyclerView, private val onScroll: (Int) -
         layoutManager.let {
             lastVisibleItemPosition = it.findLastVisibleItemPosition()
             itemCount = it.itemCount
-            Logi.logIt("\nitemCount: $itemCount\n lastVisibleItemPosition: $lastVisibleItemPosition\n")
+//            Logi.logIt("\nitemCount: $itemCount\n lastVisibleItemPosition: $lastVisibleItemPosition\n")
             if (lastVisibleItemPosition >= itemCount - LOAD_THRESHOLD) {
 //                scrollEventsSubject.onNext(itemCount)
             }

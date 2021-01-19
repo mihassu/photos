@@ -8,7 +8,7 @@ data class CommentsResponse (
 
     @SerializedName("comments")
     @Expose
-    var comments: Comments,
+    var comments: Comments? = null,
 
     @SerializedName("stat")
     @Expose

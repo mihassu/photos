@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_photos_container"
-    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh"
+        android:id="@+id/swipe_refresh_interest"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -19,7 +19,7 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <ru.mihassu.photos.ui.fragments.common.PhotosRecyclerView
-            android:id="@+id/rv_photos_list"
+            android:id="@+id/rv_photos_list_interest"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/item_photo"
@@ -31,7 +31,7 @@
 
 
     <ProgressBar
-        android:id="@+id/progress_photos"
+        android:id="@+id/progress_interest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -42,15 +42,17 @@
         android:indeterminateTint="@color/colorPrimaryDark"
         android:visibility="gone"/>
 
-    <View
-        android:id="@+id/snackbar_anchor_view"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/colorAccent"/>
-
+        android:layout_marginTop="5dp"
+        android:background="@drawable/bnv_border_round"
+        android:textSize="20sp"
+        tools:text="2021-01-15" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

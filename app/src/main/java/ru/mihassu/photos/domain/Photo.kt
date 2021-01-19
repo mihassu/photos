@@ -18,7 +18,7 @@ data class Photo(
             return false
         }
         val another = other as Photo
-        return id == another.id
+        return (id == another.id) and (title == another.title)
     }
 
     override fun hashCode(): Int {

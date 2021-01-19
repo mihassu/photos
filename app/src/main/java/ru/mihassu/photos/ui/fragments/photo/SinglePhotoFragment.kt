@@ -66,10 +66,14 @@ class SinglePhotoFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_single_photo, container, false)
-        initViews(v)
-        initRecyclerView(v)
-        initBottomSheet(v)
         return v
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initViews(view)
+        initRecyclerView(view)
+        initBottomSheet(view)
     }
 
     override fun onResume() {
@@ -145,7 +149,12 @@ class SinglePhotoFragment : Fragment() {
                         BottomSheetBehavior.STATE_EXPANDED -> {
                             currentPhoto?.let {
                                 if (it.comments.isNotEmpty()) {
-                                    commentsTitle.text = getString(R.string.comments)
+                                    commentsTitle.text = buildString {
+                                        append(getString(R.string.comments))
+                                        append("(")
+                                        append(it.comments.size)
+                                        append(")")
+                                    }
                                     commentsRvAdapter.commentsList = it.comments
                                     commentsRvAdapter.notifyDataSetChanged()
                                 } else {
