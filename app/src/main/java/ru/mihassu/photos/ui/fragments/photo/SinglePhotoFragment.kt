@@ -139,7 +139,7 @@ class SinglePhotoFragment : Fragment() {
         BottomSheetBehavior.from(bottomSheetComments).apply {
             bottomSheetBehavior = this
             isFitToContents = false
-            setExpandedOffset(800)
+            expandedOffset = 800
             isHideable = false
 //            isDraggable = false
             peekHeight = 0

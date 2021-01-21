@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-<!--    photos-->
+    <!--    photos-->
     <dimen name="photo_corner_radius">2dp</dimen>
     <dimen name="photo_height">200dp</dimen>
     <dimen name="photo_item_margin">2dp</dimen>
 
-<!--    bottom navigation view-->
+    <!--    bottom navigation view-->
     <dimen name="bnv_height">58dp</dimen>
     <dimen name="bnv_corner_radius">29dp</dimen>
     <dimen name="bnv_start_end_margin">40dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
 </resources>

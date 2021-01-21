@@ -5,17 +5,21 @@
     <string name="comments">Комментарии</string>
     <string name="no_comments">Нет комментариев</string>
 
-<!--    bottom menu-->
+    <!--    bottom menu-->
     <string name="photos_item">Фото</string>
     <string name="interest_item">Интересные</string>
     <string name="search_item">Поиск</string>
     <string name="favorites_item">Избранное</string>
 
-<!--    navigation-->
+    <!--    navigation-->
     <string name="photos_fragment_label">Фото</string>
     <string name="search_fragment_label">Поиск</string>
     <string name="favorite_fragment_label">Избранное</string>
     <string name="interest_fragment_label">Интересные</string>
     <string name="single_photo_fragment_label">Просмотр</string>
+    <string name="title_activity_test">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 
 </resources>
