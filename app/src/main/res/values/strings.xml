@@ -17,9 +17,9 @@
     <string name="favorite_fragment_label">Избранное</string>
     <string name="interest_fragment_label">Интересные</string>
     <string name="single_photo_fragment_label">Просмотр</string>
-    <string name="title_activity_test">MainActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+
+<!--    InterestFragment-->
+    <string name="date">Дата</string>
+
 
 </resources>

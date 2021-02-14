@@ -10,7 +10,13 @@
     <dimen name="bnv_height">58dp</dimen>
     <dimen name="bnv_corner_radius">29dp</dimen>
     <dimen name="bnv_start_end_margin">40dp</dimen>
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+<!--    dates chooser-->
+    <dimen name="date_item_margin">10dp</dimen>
+    <dimen name="date_item_radius">5dp</dimen>
+
 </resources>

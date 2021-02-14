@@ -21,6 +21,7 @@ import ru.mihassu.photos.domain.Photo
 import ru.mihassu.photos.repository.PhotosRepository
 import ru.mihassu.photos.ui.animation.MyAnimator
 import ru.mihassu.photos.ui.db.DataBaseInteractor
+import ru.mihassu.photos.ui.fragments.common.BaseFragment
 import javax.inject.Inject
 
 class SinglePhotoFragment : Fragment() {

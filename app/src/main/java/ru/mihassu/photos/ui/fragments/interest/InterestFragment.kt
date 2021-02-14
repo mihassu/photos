@@ -1,18 +1,25 @@
 package ru.mihassu.photos.ui.fragments.interest
 
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.animation.doOnEnd
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.squareup.picasso.Picasso
+import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
+import kotlinx.android.synthetic.main.fragment_interest.*
 import ru.mihassu.photos.App
 import ru.mihassu.photos.R
 import ru.mihassu.photos.common.Constants
@@ -21,19 +28,12 @@ import ru.mihassu.photos.domain.Photo
 import ru.mihassu.photos.repository.PhotosRepository
 import ru.mihassu.photos.ui.animation.MyAnimator
 import ru.mihassu.photos.ui.db.DataBaseInteractor
-import ru.mihassu.photos.ui.fragments.common.PhotosCallback
-import ru.mihassu.photos.ui.fragments.common.PhotosRecyclerView
-import ru.mihassu.photos.ui.fragments.common.RecyclerViewEvents
+import ru.mihassu.photos.ui.fragments.common.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class InterestFragment : Fragment() {
-
-    companion object {
-        var PER_PAGE = 40
-        val ONE_DAY_SECONDS = 86400L
-    }
+class InterestFragment : BaseFragment() {
 
     @Inject
     lateinit var picasso: Picasso
@@ -43,13 +43,14 @@ class InterestFragment : Fragment() {
     lateinit var dbInteractor: DataBaseInteractor
 
     private lateinit var progressBar: ProgressBar
-    private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var rvPhotos: PhotosRecyclerView
     private lateinit var viewModel: InterestViewModel
     private lateinit var animator: MyAnimator
     private val disposables = CompositeDisposable()
-    private lateinit var currentDate: String
-
+//    private lateinit var currentDate: String
+//    private var currentDatePos: Int = 0
+    private lateinit var navController: NavController
+    private lateinit var datesScroll: DatesScrollConstraint
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,10 +59,8 @@ class InterestFragment : Fragment() {
         component.inject(this)
         viewModel = ViewModelProvider(this, InterestViewModelFactory(photosRepository, dbInteractor))
                 .get(InterestViewModel::class.java)
-        val unixDate = System.currentTimeMillis()
-        val date = Date(unixDate - ONE_DAY_SECONDS*2000)
-        currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date)
     }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_interest, container, false)
@@ -71,10 +70,16 @@ class InterestFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         animator = MyAnimator(requireContext())
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_container_main)
+
         viewModel.getPhotosLiveData()
                 .observe(viewLifecycleOwner, { photosCallback: PhotosCallback ->
                     when (photosCallback) {
-                        is PhotosCallback.PhotosLoaded -> showPhotos(photosCallback.photos)
+                        is PhotosCallback.PhotosLoaded -> {
+                            if (photosCallback.photos.isNotEmpty()) {
+                                showPhotos(photosCallback.photos)
+                            } else hideProgress()
+                        }
                         is PhotosCallback.PhotosError -> { showToast(photosCallback.th.message.toString()); hideProgress() }
                         is PhotosCallback.PhotosEmpty -> { showToast("No photos"); showPhotos(photosCallback.photos) }
                     }
@@ -85,20 +90,18 @@ class InterestFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView(view)
         initViews(view)
+//        initSpinner()
+        initDatesChooser(view)
     }
 
     override fun onResume() {
         super.onResume()
-//        showProgress()
-        viewModel.initLoad(currentDate, PER_PAGE)
+        showProgress()
+        viewModel.initLoad(0)
     }
 
     private fun initViews(v: View) {
         progressBar = v.findViewById(R.id.progress_interest)
-        swipeRefresh = v.findViewById(R.id.swipe_refresh_interest)
-        swipeRefresh.setOnRefreshListener { refresh() }
-        val dateField : TextView = v.findViewById(R.id.tv_date)
-        dateField.text = currentDate
     }
 
     private fun initRecyclerView(v: View) {
@@ -108,7 +111,7 @@ class InterestFragment : Fragment() {
                 when(event) {
                     is RecyclerViewEvents.LoadMoreEvent -> {
                         showProgress()
-                        viewModel.loading(currentDate, PER_PAGE)
+                        viewModel.loading()
                     }
                     is RecyclerViewEvents.ScrollEvent ->
                         when (event.direction) {
@@ -128,6 +131,47 @@ class InterestFragment : Fragment() {
         disposables.add(rvPhotos.rvEventsProcessor.subscribeWith(rvEventsObserver))
     }
 
+    private fun initDatesChooser(v: View) {
+        datesScroll = v.findViewById(R.id.dates_scroll)
+        viewModel.getDatesLiveData().observe(viewLifecycleOwner) { datesListState ->
+            datesScroll.addViewForDates(datesListState.getDatesList(), datesListState.getCurrentDatePos())
+        }
+        datesScroll.setOnDateClick { datePos ->
+            showProgress()
+            viewModel.onRefresh()
+            viewModel.initLoad(datePos)
+        }
+
+        val dateButton = v.findViewById<TextView>(R.id.tv_date)
+        dateButton.setOnClickListener { datesScroll.showAllItems() }
+    }
+
+
+
+//    private fun initSpinner() {
+//
+//        val spinnerAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, datesList)
+//                .apply { setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+//
+//        spinner_dates.apply {
+//            adapter = spinnerAdapter
+//            visibility = View.VISIBLE
+//            prompt = "Дата"
+//            onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//                override fun onNothingSelected(parent: AdapterView<*>?) {
+//
+//                }
+//
+//                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+//                    currentDate = datesList[position]
+//                    viewModel.onRefresh()
+//                    viewModel.initLoad(currentDate, PER_PAGE)
+//                    showProgress()
+//                }
+//            }
+//        }
+//    }
+
     private fun showPhotos(photosList: List<Photo>) {
         rvPhotos.setDataList(photosList)
         hideProgress()
@@ -139,16 +183,12 @@ class InterestFragment : Fragment() {
                 .subscribe({
                     val bundle = Bundle()
                     bundle.putLong(Constants.PHOTO_ID_EXTRA, photo.id)
-                    Navigation.findNavController(requireView()).navigate(R.id.action_interest_to_single_photo, bundle)
+//                    Navigation.findNavController(requireView()).navigate(R.id.action_interest_to_single_photo, bundle)
+                    navController.navigate(R.id.action_mainFragment_to_singlePhotoFragment, bundle)
                 }, {th -> Logi.logIt("Add to cache ERROR: ${th.message}")})
                 .apply { disposables.add(this) }
     }
 
-    private fun refresh() {
-        showProgress()
-        viewModel.onRefresh()
-        viewModel.initLoad(currentDate, PER_PAGE)
-    }
 
     private fun showProgress() {
         progressBar.visibility = View.VISIBLE
@@ -156,7 +196,6 @@ class InterestFragment : Fragment() {
 
     private fun hideProgress() {
         progressBar.visibility = View.GONE
-        swipeRefresh.isRefreshing = false
     }
 
     private fun showToast(text: String) {
@@ -167,4 +206,6 @@ class InterestFragment : Fragment() {
         super.onDestroy()
         disposables.dispose()
     }
+
+
 }

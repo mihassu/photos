@@ -6,10 +6,10 @@ import ru.mihassu.photos.common.Logi
 import ru.mihassu.photos.domain.PhotoPage
 import ru.mihassu.photos.repository.PhotosRepository
 import ru.mihassu.photos.ui.db.DataBaseInteractor
-import ru.mihassu.photos.ui.fragments.common.ViewModelBase
+import ru.mihassu.photos.ui.fragments.common.BaseViewModel
 import ru.mihassu.photos.ui.fragments.common.PhotosCallback
 
-class SearchViewModel(private val photosRepository: PhotosRepository, dbInteractor: DataBaseInteractor) : ViewModelBase(dbInteractor) {
+class SearchViewModel(private val photosRepository: PhotosRepository, dbInteractor: DataBaseInteractor) : BaseViewModel(dbInteractor) {
 
     private var currentQuery = ""
 

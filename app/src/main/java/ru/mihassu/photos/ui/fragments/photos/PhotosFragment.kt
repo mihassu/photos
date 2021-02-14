@@ -10,6 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
@@ -26,13 +27,10 @@ import ru.mihassu.photos.interactor.SearchInteractor
 import ru.mihassu.photos.repository.PhotosRepository
 import ru.mihassu.photos.ui.animation.MyAnimator
 import ru.mihassu.photos.ui.db.DataBaseInteractor
-import ru.mihassu.photos.ui.fragments.common.PhotosCallback
-import ru.mihassu.photos.ui.fragments.common.PhotosRecyclerView
-import ru.mihassu.photos.ui.fragments.common.RecyclerViewEvents
-import ru.mihassu.photos.ui.fragments.common.RvScrollListener
+import ru.mihassu.photos.ui.fragments.common.*
 import javax.inject.Inject
 
-class PhotosFragment : Fragment() //extends MvpAppCompatFragment implements IPhotoFragment
+class PhotosFragment : BaseFragment() //extends MvpAppCompatFragment implements IPhotoFragment
 {
 
     companion object {
@@ -58,7 +56,7 @@ class PhotosFragment : Fragment() //extends MvpAppCompatFragment implements IPho
     private lateinit var photosFragmentContainer: ConstraintLayout
     //    @InjectPresenter
     //    PhotosPresenter mainPresenter;
-//    private lateinit var navController: NavController
+    private lateinit var navController: NavController
     private lateinit var viewModel: PhotosViewModel
     private lateinit var animator: MyAnimator
     private val disposables = CompositeDisposable()
@@ -84,11 +82,16 @@ class PhotosFragment : Fragment() //extends MvpAppCompatFragment implements IPho
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 //        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_container_main)
         animator = MyAnimator(requireContext())
         viewModel.getPhotosLiveData()
                 .observe(viewLifecycleOwner, { photosCallback: PhotosCallback ->
                     when (photosCallback) {
-                        is PhotosCallback.PhotosLoaded -> showPhotos(photosCallback.photos)
+                        is PhotosCallback.PhotosLoaded -> {
+                            if (photosCallback.photos.isNotEmpty()) {
+                                showPhotos(photosCallback.photos)
+                            } else hideProgress()
+                        }
                         is PhotosCallback.PhotosError -> { showToast(photosCallback.th.message.toString()); hideProgress() }
                         is PhotosCallback.PhotosEmpty -> { showSnackBar(); showPhotos(photosCallback.photos) }
                     }
@@ -105,6 +108,7 @@ class PhotosFragment : Fragment() //extends MvpAppCompatFragment implements IPho
 
     override fun onResume() {
         super.onResume()
+        showProgress()
         viewModel.initLoad(PER_PAGE)
 //        Logi.logIt("PhotosFragment - onResume()");
 //        mainPresenter.onFragmentResume(getActivity());
@@ -160,7 +164,9 @@ class PhotosFragment : Fragment() //extends MvpAppCompatFragment implements IPho
                 .subscribe({
                     val bundle = Bundle()
                     bundle.putLong(Constants.PHOTO_ID_EXTRA, photo.id)
-                    Navigation.findNavController(requireView()).navigate(R.id.action_photos_to_single_photo, bundle)
+//                    Navigation.findNavController(requireView()).navigate(R.id.action_photos_to_single_photo, bundle)
+                    navController.navigate(R.id.action_mainFragment_to_singlePhotoFragment, bundle)
+
                 }, {th -> Logi.logIt("Add to cache ERROR: ${th.message}")})
                 .apply { disposables.add(this) }
     }
@@ -180,7 +186,9 @@ class PhotosFragment : Fragment() //extends MvpAppCompatFragment implements IPho
     }
 
     private fun showProgress() {
-        progressBar.visibility = View.VISIBLE
+        if (progressBar.visibility != View.VISIBLE) {
+            progressBar.visibility = View.VISIBLE
+        }
     }
 
     private fun hideProgress() {

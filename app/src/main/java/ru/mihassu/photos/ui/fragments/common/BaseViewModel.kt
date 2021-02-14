@@ -9,7 +9,7 @@ import io.reactivex.observers.DisposableObserver
 import ru.mihassu.photos.domain.Photo
 import ru.mihassu.photos.ui.db.DataBaseInteractor
 
-open class ViewModelBase(dbInteractor: DataBaseInteractor): ViewModel() {
+open class BaseViewModel(dbInteractor: DataBaseInteractor): ViewModel() {
 
     companion object {
         const val FIRST_PAGE = 1
@@ -51,7 +51,7 @@ open class ViewModelBase(dbInteractor: DataBaseInteractor): ViewModel() {
     }
 
 
-    fun onRefresh() {
+    open fun onRefresh() {
         pageNumber = FIRST_PAGE
         dataListState.clear()
         isFirstQuery = true

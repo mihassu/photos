@@ -16,8 +16,7 @@ import java.io.IOException
 class MainActivity : AppCompatActivity() {
 
     private val searchButton: Button? = null
-    private lateinit var navController: NavController
-    private lateinit var bottomNavigationView: BottomNavigationView
+
     companion object {
         @JvmStatic
         lateinit var activityComponent: ActivityComponent
@@ -36,14 +35,8 @@ class MainActivity : AppCompatActivity() {
         activityComponent = DaggerActivityComponent.builder()
                 .activityContextModule(ActivityContextModule(this))
                 .build()
-//        navController = Navigation.findNavController(this, R.id.nav_host_bottom)
-//        initViews()
     }
 
-
-    private fun initViews() {
-        bottomNavigationView = findViewById(R.id.bottom_navigation)
-    }
 
     override fun onDestroy() {
         super.onDestroy()
