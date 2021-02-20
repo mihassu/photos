@@ -11,7 +11,7 @@ open class BaseFragment: Fragment(), AnimatedFragment {
     override fun showQuitAnimation(): Completable {
         return Completable.create { emitter ->
             val alphaAnimator = ObjectAnimator.ofFloat(requireView(), View.ALPHA, 1f, 0f).apply {
-                duration = 800
+                duration = 400
                 doOnEnd { emitter.onComplete() }
             }
             alphaAnimator.start()
@@ -21,7 +21,7 @@ open class BaseFragment: Fragment(), AnimatedFragment {
     override fun showEnterAnimation(): Completable {
         return Completable.create { emitter ->
             val alphaAnimator = ObjectAnimator.ofFloat(requireView(), View.ALPHA, 0f, 1f).apply {
-                duration = 800
+                duration = 400
                 doOnEnd { emitter.onComplete() }
             }
             alphaAnimator.start()

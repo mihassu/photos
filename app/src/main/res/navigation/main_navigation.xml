@@ -23,8 +23,10 @@
     <fragment
         android:id="@+id/singlePhotoFragment"
         android:name="ru.mihassu.photos.ui.fragments.photo.SinglePhotoFragment"
-        android:label="fragment_single_photo" />
-    <argument
-        android:name="photoId"
-        app:argType="long"/>
+        android:label="fragment_single_photo">
+        <argument
+            android:name="photoId"
+            app:argType="long"/>
+    </fragment>
+
 </navigation>

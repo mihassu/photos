@@ -75,7 +75,7 @@ class FavoriteFragment : BaseFragment() {
     private fun initRecyclerView(v: View) {
         val favoritesRv = v.findViewById<RecyclerView>(R.id.rv_favorites)
         val lm = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        rvAdapter = FavoriteRvAdapter(picasso)
+        rvAdapter = FavoriteRvAdapter(picasso, requireContext().resources.displayMetrics.widthPixels)
         rvAdapter.setAdapterEventListener(object : FavoriteRvAdapter.AdapterEventListener{
             override fun onEvent(event: FavoriteAdaptedEvent) {
                 when(event) {
@@ -88,11 +88,6 @@ class FavoriteFragment : BaseFragment() {
         val favoriteTouchCallback = FavoriteTouchCallback(rvAdapter)
         val itemTouchHelper = ItemTouchHelper(favoriteTouchCallback)
         itemTouchHelper.attachToRecyclerView(favoritesRv)
-
-        val rvWidth = favoritesRv.layoutParams.width
-        val rvWidth1 = favoritesRv.width
-        val rvWidth2 = favoritesRv.measuredWidth
-        rvAdapter.setRvWidth(rvWidth)
 
         favoritesRv.layoutManager = lm
         favoritesRv.adapter = rvAdapter

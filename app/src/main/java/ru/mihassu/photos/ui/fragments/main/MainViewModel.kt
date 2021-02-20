@@ -58,15 +58,15 @@ class MainViewModel(private val fragmentManager: FragmentManager) : ViewModel() 
 
     fun changeFragment(fragmentTag: String) {
         fragmentManager.findFragmentByTag(fragmentTag)?.let {
-            (activeFragment as? AnimatedFragment)?.showQuitAnimation()?.subscribe()
-            fragmentManager.beginTransaction().detach(activeFragment!!).commit()
-            activeFragment = it
-            activeLiveData.value = fragmentManager.beginTransaction().apply {
-                detach(activeFragment!!)
-                attach(activeFragment!!)
+            (activeFragment as? AnimatedFragment)?.showQuitAnimation()?.subscribe {
+                fragmentManager.beginTransaction().detach(activeFragment!!).commit()
+                activeFragment = it
+                activeLiveData.value = fragmentManager.beginTransaction().apply {
+                    detach(activeFragment!!)
+                    attach(activeFragment!!)
+                }
             }
         }
-
     }
 
     fun showEnterAnimation() {

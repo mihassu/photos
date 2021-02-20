@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -20,6 +21,7 @@ import ru.mihassu.photos.common.Constants
 import ru.mihassu.photos.domain.Photo
 import ru.mihassu.photos.repository.PhotosRepository
 import ru.mihassu.photos.ui.animation.MyAnimator
+import ru.mihassu.photos.ui.custom.FitWidthTransformation
 import ru.mihassu.photos.ui.db.DataBaseInteractor
 import ru.mihassu.photos.ui.fragments.common.BaseFragment
 import javax.inject.Inject
@@ -38,6 +40,7 @@ class SinglePhotoFragment : Fragment() {
     private lateinit var imageField: ImageView
     private lateinit var progress: ProgressBar
     private lateinit var addToFavorite: ImageView
+    private lateinit var isFavoriteIcon: ImageView
     private lateinit var closeBottomSheetButton: ImageButton
     private lateinit var viewModel: SinglePhotoViewModel
     private var photoId: Long? = 0
@@ -83,7 +86,12 @@ class SinglePhotoFragment : Fragment() {
             currentPhoto = photo
             picasso
                     .load(photo.getMaxSizeUrl())
+                    .error(R.drawable.placeholder_error)
+                    .transform(FitWidthTransformation(requireContext().resources.displayMetrics.widthPixels))
+//                    .resize(requireContext().resources.displayMetrics.widthPixels, 1000)
+//                    .centerInside()
                     .into(imageField)
+
             photoTitleField.text = photo.title
             hideProgress()
             viewModel.checkFavorite(photo)
@@ -91,9 +99,14 @@ class SinglePhotoFragment : Fragment() {
 
         viewModel.getIsPhotoFavoriteLiveData().observe(this, { isFavorite: Boolean ->
             if (isFavorite) {
-                addToFavorite.setImageDrawable(requireActivity().getDrawable(R.drawable.ic_baseline_favorite_24_red))
+                addToFavorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_favorite_24_red))
+                isFavoriteIcon.visibility = View.VISIBLE
+                hideAddFavoriteButton()
+
             } else {
-                addToFavorite.setImageDrawable(requireActivity().getDrawable(R.drawable.ic_baseline_favorite_24))
+                addToFavorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_favorite_24))
+                isFavoriteIcon.visibility = View.GONE
+                hideAddFavoriteButton()
             }
         })
 
@@ -107,6 +120,7 @@ class SinglePhotoFragment : Fragment() {
         progress = v.findViewById(R.id.progress_single_photo)
         addToFavorite = v.findViewById(R.id.iv_add_to_favorite)
         addToFavorite.setOnClickListener { addToFavorite() }
+        isFavoriteIcon = v.findViewById(R.id.iv_is_favorite)
         val buttonComments = v.findViewById<ImageButton>(R.id.button_comments)
         buttonComments.setOnClickListener { showBottomSheet() }
         commentsTitle = v.findViewById(R.id.tv_comments_title)
@@ -129,7 +143,7 @@ class SinglePhotoFragment : Fragment() {
             commentsRvAdapter = CommentsRvAdapter()
             adapter = commentsRvAdapter
             val divider = DividerItemDecoration(requireContext(), RecyclerView.VERTICAL).apply {
-                setDrawable(resources.getDrawable(R.drawable.item_divider, null))
+                ContextCompat.getDrawable(requireContext(), R.drawable.item_divider)?.let { setDrawable(it) }
             }
             addItemDecoration(divider)
         }

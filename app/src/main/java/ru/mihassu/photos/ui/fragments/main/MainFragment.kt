@@ -1,5 +1,6 @@
 package ru.mihassu.photos.ui.fragments.main
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import androidx.fragment.app.Fragment
@@ -14,6 +15,8 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import ru.mihassu.photos.R
+import ru.mihassu.photos.ui.MainActivity
+import ru.mihassu.photos.ui.fragments.FragmentsNavigation
 import ru.mihassu.photos.ui.helper.setupWithNavController
 
 class MainFragment : Fragment() {
@@ -21,8 +24,15 @@ class MainFragment : Fragment() {
 //    private lateinit var navController: NavController
     private lateinit var bottomNavigationView: BottomNavigationView
     private var currentNavController: LiveData<NavController>? = null
-    private lateinit var fm: FragmentManager
-    private lateinit var viewModel: MainViewModel
+//    private lateinit var fm: FragmentManager
+//    private lateinit var viewModel: MainViewModel
+    private lateinit var fragmentsNavigation: FragmentsNavigation
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        fragmentsNavigation = context as FragmentsNavigation
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,19 +56,19 @@ class MainFragment : Fragment() {
         if (savedInstanceState == null) {
 //            setupBottomNavigationBar()
         }
-        fm = requireActivity().supportFragmentManager
-        viewModel = ViewModelProvider(this, MainViewModelFactory(fm)).get(MainViewModel::class.java)
-        viewModel.getActiveLiveData().observe(viewLifecycleOwner) { active ->
-            Handler().post {
-                active.commitNow()
-                viewModel.showEnterAnimation()
-            }
-        }
+//        fm = requireActivity().supportFragmentManager
+//        viewModel = ViewModelProvider(this, MainViewModelFactory(fm)).get(MainViewModel::class.java)
+//        viewModel.getActiveLiveData().observe(viewLifecycleOwner) { active ->
+//            Handler().post {
+//                active.commitNow()
+//                viewModel.showEnterAnimation()
+//            }
+//        }
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.initFragments()
+//        viewModel.initFragments()
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -77,22 +87,27 @@ class MainFragment : Fragment() {
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.photos -> {
-                    viewModel.changeFragment("photosFragment")
+                    fragmentsNavigation.setFragment(MainActivity.PHOTOS_TAG)
+//                    viewModel.changeFragment("photosFragment")
                     true
                 }
 
                 R.id.interest -> {
-                    viewModel.changeFragment("interestFragment")
+                    fragmentsNavigation.setFragment(MainActivity.INTEREST_TAG)
+
+//                    viewModel.changeFragment("interestFragment")
                     true
                 }
 
                 R.id.search -> {
-                    viewModel.changeFragment("searchFragment")
+                    fragmentsNavigation.setFragment(MainActivity.SEARCH_TAG)
+//                    viewModel.changeFragment("searchFragment")
                     true
                 }
 
                 R.id.favorites -> {
-                    viewModel.changeFragment("favoritesFragment")
+                    fragmentsNavigation.setFragment(MainActivity.FAVORITES_TAG)
+//                    viewModel.changeFragment("favoritesFragment")
                     true
                 }
 
@@ -125,11 +140,6 @@ class MainFragment : Fragment() {
         currentNavController = controllerLiveData
     }
 
-
-
-    fun hideBottomNavigation() {
-        
-    }
 
     override fun onDestroy() {
         super.onDestroy()
