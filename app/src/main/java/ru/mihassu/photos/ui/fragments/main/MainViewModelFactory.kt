@@ -6,12 +6,12 @@ import androidx.lifecycle.ViewModelProvider
 import ru.mihassu.photos.repository.PhotosRepository
 import ru.mihassu.photos.ui.db.DataBaseInteractor
 
-class MainViewModelFactory(private val fragmentManager: FragmentManager)
+class MainViewModelFactory()
     : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return when(modelClass) {
-            MainViewModel::class.java -> MainViewModel(fragmentManager) as T
+            MainViewModel::class.java -> MainViewModel() as T
             else -> null
         }!!
     }

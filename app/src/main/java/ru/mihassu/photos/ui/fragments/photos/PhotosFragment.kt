@@ -34,7 +34,16 @@ class PhotosFragment : BaseFragment() //extends MvpAppCompatFragment implements 
 {
 
     companion object {
-        var PER_PAGE = 40
+        private var instance: PhotosFragment? = null
+        var PER_PAGE = 80
+        fun getInstance() : Fragment {
+            return if (instance == null) {
+                instance = PhotosFragment()
+                instance!!
+            } else {
+                instance!!
+            }
+        }
     }
 
     @Inject
@@ -46,10 +55,7 @@ class PhotosFragment : BaseFragment() //extends MvpAppCompatFragment implements 
     @Inject
     lateinit var photosRepository: PhotosRepository
 
-//    private lateinit var searchField: EditText
-//    private lateinit var searchButton: Button
     private lateinit var progressBar: ProgressBar
-//    private lateinit var searchLayout: ConstraintLayout
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var rvPhotos: PhotosRecyclerView
     private lateinit var snackbar: Snackbar
@@ -82,7 +88,9 @@ class PhotosFragment : BaseFragment() //extends MvpAppCompatFragment implements 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 //        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_container_main)
+//        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_container_main)
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_container_main)
+
         animator = MyAnimator(requireContext())
         viewModel.getPhotosLiveData()
                 .observe(viewLifecycleOwner, { photosCallback: PhotosCallback ->
@@ -115,12 +123,7 @@ class PhotosFragment : BaseFragment() //extends MvpAppCompatFragment implements 
     }
 
     private fun initViews(v: View) {
-//        searchField = v.findViewById(R.id.et_search_field)
-//        searchButton = v.findViewById(R.id.search_button)
-//        searchLayout = v.findViewById(R.id.layout_search)
         progressBar = v.findViewById(R.id.progress_photos)
-        // Кнопка поиска
-//        searchButton.setOnClickListener { startSearch() }
         swipeRefresh = v.findViewById(R.id.swipe_refresh)
         swipeRefresh.setOnRefreshListener { refresh() }
         photosFragmentContainer = v.findViewById(R.id.fragment_photos_container)
@@ -165,24 +168,17 @@ class PhotosFragment : BaseFragment() //extends MvpAppCompatFragment implements 
                     val bundle = Bundle()
                     bundle.putLong(Constants.PHOTO_ID_EXTRA, photo.id)
 //                    Navigation.findNavController(requireView()).navigate(R.id.action_photos_to_single_photo, bundle)
-                    navController.navigate(R.id.action_mainFragment_to_singlePhotoFragment, bundle)
+//                    navController.navigate(R.id.action_mainFragment_to_singlePhotoFragment, bundle)
+                    navController.navigate(R.id.action_global_singlePhotoFragment, bundle)
 
                 }, {th -> Logi.logIt("Add to cache ERROR: ${th.message}")})
                 .apply { disposables.add(this) }
     }
 
-//    private fun startSearch() {
-//        if (searchField.text.toString().isNotEmpty()) {
-//            viewModel.clearDataList()
-//            viewModel.initLoad(searchField.text.toString(), PER_PAGE)
-//        }
-//    }
-
     private fun refresh() {
         showProgress()
         viewModel.onRefresh()
         viewModel.initLoad(PER_PAGE)
-//        searchField.text.clear()
     }
 
     private fun showProgress() {
@@ -195,20 +191,6 @@ class PhotosFragment : BaseFragment() //extends MvpAppCompatFragment implements 
         progressBar.visibility = View.GONE
         swipeRefresh.isRefreshing = false
     }
-
-//    private fun showSearch() {
-//        if (searchLayout.visibility == View.INVISIBLE) {
-//            searchLayout.visibility = View.VISIBLE
-//            animator.scaleUpAnimation(searchLayout).subscribe()
-//        }
-//    }
-//
-//    private fun hideSearch() {
-//        if (searchLayout.visibility == View.VISIBLE) {
-//            animator.scaleDownAnimation(searchLayout).subscribe { searchLayout.visibility = View.INVISIBLE }
-//                    .apply { disposables.add(this) }
-//        }
-//    }
 
     private fun showToast(text: String) {
         Toast.makeText(requireContext(), text, Toast.LENGTH_LONG).show()
@@ -227,20 +209,6 @@ class PhotosFragment : BaseFragment() //extends MvpAppCompatFragment implements 
         snackbar.show()
     }
 
-
-    //    @Override
-    //    public void showPhotos(List<Photo> photos) {
-    //        adapter.setDataList(photos);
-    //        adapter.notifyDataSetChanged();
-    //    }
-    //
-    //    @Override
-    //    public void showPhotosPaging(PagedList<Photo> photosPagedList) {
-    //        Logi.logIt("PhotosFragment - showPhotosPaging(), photosPagedList.size(): " + photosPagedList.size());
-    //        Logi.logIt("PhotosFragment - showPhotosPaging() " + photosPagedList.get(0).getUrl());
-    //        adapter.submitList(photosPagedList);
-    //    }
-    //
     override fun onPause() {
         super.onPause()
     }

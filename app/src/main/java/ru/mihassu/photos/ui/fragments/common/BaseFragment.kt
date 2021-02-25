@@ -1,12 +1,17 @@
 package ru.mihassu.photos.ui.fragments.common
 
 import android.animation.ObjectAnimator
+import android.os.Bundle
 import android.view.View
 import androidx.core.animation.doOnEnd
 import androidx.fragment.app.Fragment
 import io.reactivex.Completable
+import io.reactivex.disposables.CompositeDisposable
+import ru.mihassu.photos.common.Logi
 
 open class BaseFragment: Fragment(), AnimatedFragment {
+
+    private val disposables: CompositeDisposable = CompositeDisposable()
 
     override fun showQuitAnimation(): Completable {
         return Completable.create { emitter ->
@@ -26,5 +31,17 @@ open class BaseFragment: Fragment(), AnimatedFragment {
             }
             alphaAnimator.start()
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        showEnterAnimation().subscribe( {}, { throwable ->
+            Logi.logIt("No enter animation. Error: ${throwable.message}")
+        }).apply { disposables.add(this) }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.dispose()
     }
 }

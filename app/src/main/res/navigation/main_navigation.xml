@@ -11,7 +11,7 @@
         android:label="MainFragment" >
         <action
             android:id="@+id/action_mainFragment_to_singlePhotoFragment"
-            app:destination="@id/singlePhotoFragment"
+            app:destination="@id/navigation_single_photo_fragment"
             app:enterAnim="@anim/show_anim"
             app:exitAnim="@anim/hide_anim"
             app:launchSingleTop="false"
@@ -21,7 +21,7 @@
     </fragment>
 
     <fragment
-        android:id="@+id/singlePhotoFragment"
+        android:id="@+id/navigation_single_photo_fragment"
         android:name="ru.mihassu.photos.ui.fragments.photo.SinglePhotoFragment"
         android:label="fragment_single_photo">
         <argument

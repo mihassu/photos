@@ -17,69 +17,23 @@ import ru.mihassu.photos.ui.fragments.interest.InterestFragment
 import ru.mihassu.photos.ui.fragments.photos.PhotosFragment
 import ru.mihassu.photos.ui.fragments.search.SearchFragment
 
-class MainViewModel(private val fragmentManager: FragmentManager) : ViewModel() {
+class MainViewModel : ViewModel() {
 
-    private var photosFragment: Fragment? = PhotosFragment()
-    private var interestFragment: Fragment?  = InterestFragment()
-    private var searchFragment: Fragment?  = SearchFragment()
-    private var favoritesFragment: Fragment?  = FavoriteFragment()
-    private var activeFragment: Fragment? = photosFragment
-    private val activeLiveData = MutableLiveData<FragmentTransaction>()
+    private val activeLiveData = MutableLiveData<Pair<Fragment, String>>()
+    private var isFirstStart: Boolean = true
 
-
-    fun getActiveLiveData() : LiveData<FragmentTransaction> = activeLiveData
-
-
-    fun initFragments() {
-
-        fragmentManager.beginTransaction().apply {
-            if (fragmentManager.findFragmentByTag("photosFragment") == null) {
-                add(R.id.nav_host_container, favoritesFragment!!, "favoritesFragment").detach(favoritesFragment!!)
-                add(R.id.nav_host_container, searchFragment!!, "searchFragment").detach(searchFragment!!)
-                add(R.id.nav_host_container, interestFragment!!, "interestFragment").detach(interestFragment!!)
-                add(R.id.nav_host_container, photosFragment!!, "photosFragment").detach(photosFragment!!)
-            }
-            commit()
-        }
-        activeLiveData.value = fragmentManager.beginTransaction().apply {
-            detach(activeFragment!!)
-            attach(activeFragment!!)
-        }
-//                .setCustomAnimations(R.anim.show_anim, R.anim.hide_anim, R.anim.show_anim, R.anim.hide_anim)
+    init {
+        activeLiveData.value = PhotosFragment.getInstance() to MainFragment.PHOTOS_TAG
     }
 
-    fun detachActive() {
-        (activeFragment as? AnimatedFragment)?.let { it.showQuitAnimation()
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-            fragmentManager.beginTransaction().detach(activeFragment!!).commit()
-        } } ?: fragmentManager.beginTransaction().detach(activeFragment!!).commit()
-    }
+    fun getActiveLiveData() : LiveData<Pair<Fragment, String>> = activeLiveData
 
-    fun changeFragment(fragmentTag: String) {
-        fragmentManager.findFragmentByTag(fragmentTag)?.let {
-            (activeFragment as? AnimatedFragment)?.showQuitAnimation()?.subscribe {
-                fragmentManager.beginTransaction().detach(activeFragment!!).commit()
-                activeFragment = it
-                activeLiveData.value = fragmentManager.beginTransaction().apply {
-                    detach(activeFragment!!)
-                    attach(activeFragment!!)
-                }
-            }
-        }
-    }
-
-    fun showEnterAnimation() {
-        (activeFragment as? AnimatedFragment)?.showEnterAnimation()?.subscribe()
+    fun setActiveFragment(fragment: Fragment, tag: String) {
+        activeLiveData.value = fragment to tag
     }
 
 
     override fun onCleared() {
         super.onCleared()
-        photosFragment = null
-        interestFragment = null
-        searchFragment = null
-        favoritesFragment = null
-        activeFragment = null
     }
 }

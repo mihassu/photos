@@ -29,11 +29,24 @@ import ru.mihassu.photos.repository.PhotosRepository
 import ru.mihassu.photos.ui.animation.MyAnimator
 import ru.mihassu.photos.ui.db.DataBaseInteractor
 import ru.mihassu.photos.ui.fragments.common.*
+import ru.mihassu.photos.ui.fragments.photos.PhotosFragment
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
 class InterestFragment : BaseFragment() {
+
+    companion object {
+        private var instance: InterestFragment? = null
+        fun getInstance() : Fragment {
+            return if (instance == null) {
+                instance = InterestFragment()
+                instance!!
+            } else {
+                instance!!
+            }
+        }
+    }
 
     @Inject
     lateinit var picasso: Picasso
@@ -70,7 +83,7 @@ class InterestFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         animator = MyAnimator(requireContext())
-        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_container_main)
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_container_main)
 
         viewModel.getPhotosLiveData()
                 .observe(viewLifecycleOwner, { photosCallback: PhotosCallback ->
@@ -184,7 +197,7 @@ class InterestFragment : BaseFragment() {
                     val bundle = Bundle()
                     bundle.putLong(Constants.PHOTO_ID_EXTRA, photo.id)
 //                    Navigation.findNavController(requireView()).navigate(R.id.action_interest_to_single_photo, bundle)
-                    navController.navigate(R.id.action_mainFragment_to_singlePhotoFragment, bundle)
+                    navController.navigate(R.id.action_global_singlePhotoFragment, bundle)
                 }, {th -> Logi.logIt("Add to cache ERROR: ${th.message}")})
                 .apply { disposables.add(this) }
     }

@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import io.reactivex.disposables.CompositeDisposable
 import okhttp3.*
@@ -35,8 +36,7 @@ class MainActivity : AppCompatActivity(), FragmentsNavigation {
     private var favoritesFragment: Fragment?  = null
     private var activeFragment: Fragment? = null
     private val disposables: CompositeDisposable = CompositeDisposable()
-
-    private lateinit var viewModel: MainActivityViewModel
+//    private lateinit var viewModel: MainActivityViewModel
     private val searchButton: Button? = null
 
     companion object {
@@ -57,40 +57,43 @@ class MainActivity : AppCompatActivity(), FragmentsNavigation {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme_NoActionBar)
         super.onCreate(savedInstanceState)
-        initFragments()
+//        initFragments()
         setContentView(R.layout.activity_main)
 
         activityComponent = DaggerActivityComponent.builder()
                 .activityContextModule(ActivityContextModule(this))
                 .build()
 
-        viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-        viewModel.getActiveLiveData().observe(this, Observer { active ->
-            changeFragment(active)
-        })
+//        viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+//        viewModel.getActiveLiveData().observe(this, Observer { active ->
+//            changeFragment(active)
+//        })
+
+//        val host = supportFragmentManager.findFragmentById(R.id.nav_container_bottom) as NavHostFragment
+//        val navController = host.navController
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.setActiveFragment(activeFragment!!)
+//        viewModel.setActiveFragment(activeFragment!!)
     }
 
 
-    private fun initFragments() {
-        photosFragment = PhotosFragment()
-        interestFragment = InterestFragment()
-        searchFragment = SearchFragment()
-        favoritesFragment = FavoriteFragment()
-        activeFragment = photosFragment
-
-        supportFragmentManager.beginTransaction().apply {
-            add(R.id.nav_host_container, favoritesFragment!!, FAVORITES_TAG).detach(favoritesFragment!!)
-            add(R.id.nav_host_container, searchFragment!!, SEARCH_TAG).detach(searchFragment!!)
-            add(R.id.nav_host_container, interestFragment!!, INTEREST_TAG).detach(interestFragment!!)
-            add(R.id.nav_host_container, photosFragment!!, PHOTOS_TAG).detach(photosFragment!!)
-            commit()
-        }
-    }
+//    private fun initFragments() {
+//        photosFragment = PhotosFragment()
+//        interestFragment = InterestFragment()
+//        searchFragment = SearchFragment()
+//        favoritesFragment = FavoriteFragment()
+//        activeFragment = photosFragment
+//
+//        supportFragmentManager.beginTransaction().apply {
+//            add(R.id.nav_host_container, favoritesFragment!!, FAVORITES_TAG).detach(favoritesFragment!!)
+//            add(R.id.nav_host_container, searchFragment!!, SEARCH_TAG).detach(searchFragment!!)
+//            add(R.id.nav_host_container, interestFragment!!, INTEREST_TAG).detach(interestFragment!!)
+//            add(R.id.nav_host_container, photosFragment!!, PHOTOS_TAG).detach(photosFragment!!)
+//            commit()
+//        }
+//    }
 
     private fun changeFragment(fragment: Fragment) {
             (fragment as? AnimatedFragment)?.showQuitAnimation()?.subscribe ({
@@ -119,7 +122,7 @@ class MainActivity : AppCompatActivity(), FragmentsNavigation {
 
     override fun setFragment(fragmentTag: String) {
         supportFragmentManager.findFragmentByTag(fragmentTag)?.let {
-            viewModel.setActiveFragment(it)
+//            viewModel.setActiveFragment(it)
         }
     }
 

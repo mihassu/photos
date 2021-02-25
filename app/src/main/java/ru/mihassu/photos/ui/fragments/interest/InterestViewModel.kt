@@ -14,7 +14,7 @@ import java.util.*
 
 class InterestViewModel(private val photosRepository: PhotosRepository, dbInteractor: DataBaseInteractor) : BaseViewModel(dbInteractor) {
 
-    private val PER_PAGE = 40
+    private val PER_PAGE = 80
 
     private val datesLiveData: MutableLiveData<DatesListState> = MutableLiveData()
     private val datesListState: DatesListState = DatesListState()
