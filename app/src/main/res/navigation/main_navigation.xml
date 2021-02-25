@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/main_fragment_nav">
+
+    <fragment
+        android:id="@+id/main_fragment_nav"
+        android:name="ru.mihassu.photos.ui.fragments.main.MainFragment"
+        android:label="MainFragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_singlePhotoFragment"
+            app:destination="@id/navigation_single_photo_fragment"
+            app:enterAnim="@anim/show_anim"
+            app:exitAnim="@anim/hide_anim"
+            app:launchSingleTop="false"
+            app:popEnterAnim="@anim/show_anim"
+            app:popExitAnim="@anim/hide_anim"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_single_photo_fragment"
+        android:name="ru.mihassu.photos.ui.fragments.photo.SinglePhotoFragment"
+        android:label="fragment_single_photo">
+        <argument
+            android:name="photoId"
+            app:argType="long"/>
+    </fragment>
+
+</navigation>

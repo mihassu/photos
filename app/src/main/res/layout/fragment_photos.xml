@@ -6,8 +6,7 @@
     android:id="@+id/fragment_photos_container"
     android:fitsSystemWindows="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    android:layout_height="match_parent">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
@@ -29,7 +28,6 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-
     <ProgressBar
         android:id="@+id/progress_photos"
         android:layout_width="wrap_content"
@@ -50,7 +48,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="@color/colorAccent"/>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

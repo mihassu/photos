@@ -3,14 +3,13 @@ package ru.mihassu.photos.ui.fragments.photos
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import ru.mihassu.photos.common.Logi
-import ru.mihassu.photos.domain.Photo
 import ru.mihassu.photos.domain.PhotoPage
 import ru.mihassu.photos.repository.PhotosRepository
 import ru.mihassu.photos.ui.db.DataBaseInteractor
-import ru.mihassu.photos.ui.fragments.common.ViewModelBase
+import ru.mihassu.photos.ui.fragments.common.BaseViewModel
 import ru.mihassu.photos.ui.fragments.common.PhotosCallback
 
-class PhotosViewModel(private val photosRepository: PhotosRepository, dbInteractor: DataBaseInteractor) : ViewModelBase(dbInteractor) {
+class PhotosViewModel(private val photosRepository: PhotosRepository, dbInteractor: DataBaseInteractor) : BaseViewModel(dbInteractor) {
 
     fun loading(perPage: Int) {
         if (pageNumber >= totalPages) {
@@ -29,7 +28,10 @@ class PhotosViewModel(private val photosRepository: PhotosRepository, dbInteract
     }
 
     fun initLoad(perPage: Int) {
-        if (!isFirstQuery) { return }
+        if (!isFirstQuery) {
+            photosLiveData.value = PhotosCallback.PhotosLoaded(dataListState.getDataList())
+            return
+        }
         isFirstQuery = false
 //        currentQuery = query
 

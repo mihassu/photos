@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +17,7 @@
         android:elevation="2dp"
         android:alpha="0.95"
         android:layout_margin="20dp"
-        android:background="@drawable/bnv_border_round">
+        android:background="@drawable/item_date_checked">
 
         <EditText
             android:id="@+id/et_search_field"

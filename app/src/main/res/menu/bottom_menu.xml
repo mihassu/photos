@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/photos"
-        android:enabled="true"
+        android:id="@+id/navigation_photos_fragment"
         android:icon="@drawable/ic_baseline_image_24"
         android:title="@string/photos_item"/>
 
     <item
-        android:id="@+id/interest"
-        android:enabled="true"
+        android:id="@+id/navigation_interest_fragment"
         android:icon="@drawable/ic_baseline_image_24"
         android:title="@string/interest_item"/>
 
     <item
-        android:id="@+id/search"
-        android:enabled="true"
+        android:id="@+id/navigation_search_fragment"
         android:icon="@drawable/ic_baseline_image_search_24"
         android:title="@string/search_item"/>
 
     <item
-        android:id="@+id/favorites"
-        android:enabled="true"
+        android:id="@+id/navigation_favorites_fragment"
         android:icon="@drawable/ic_baseline_favorite_24"
         android:title="@string/favorites_item"/>
 

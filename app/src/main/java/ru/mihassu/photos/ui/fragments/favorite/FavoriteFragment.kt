@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,9 +20,23 @@ import ru.mihassu.photos.common.Constants
 import ru.mihassu.photos.common.Logi
 import ru.mihassu.photos.domain.Photo
 import ru.mihassu.photos.ui.db.DataBaseInteractor
+import ru.mihassu.photos.ui.fragments.common.BaseFragment
+import ru.mihassu.photos.ui.fragments.photos.PhotosFragment
 import javax.inject.Inject
 
-class FavoriteFragment : Fragment() {
+class FavoriteFragment : BaseFragment() {
+
+    companion object {
+        private var instance: FavoriteFragment? = null
+        fun getInstance() : Fragment {
+            return if (instance == null) {
+                instance = FavoriteFragment()
+                instance!!
+            } else {
+                instance!!
+            }
+        }
+    }
 
     @Inject
     lateinit var picasso: Picasso
@@ -29,15 +44,11 @@ class FavoriteFragment : Fragment() {
     @Inject
     lateinit var dbInteractor: DataBaseInteractor
 
-    companion object {
-        fun newInstance() = FavoriteFragment()
-    }
 
     private lateinit var viewModel: FavoriteViewModel
     private lateinit var rvAdapter : FavoriteRvAdapter
     private val disposables = CompositeDisposable()
-
-//    private lateinit var navController: NavController
+    private lateinit var navController: NavController
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +65,7 @@ class FavoriteFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-//        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_container_main)
         viewModel.getPhotosLiveData().observe(viewLifecycleOwner, { photos: List<Photo> ->
             rvAdapter.setDataList(photos)
         } )
@@ -73,7 +84,7 @@ class FavoriteFragment : Fragment() {
     private fun initRecyclerView(v: View) {
         val favoritesRv = v.findViewById<RecyclerView>(R.id.rv_favorites)
         val lm = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        rvAdapter = FavoriteRvAdapter(picasso)
+        rvAdapter = FavoriteRvAdapter(picasso, requireContext().resources.displayMetrics.widthPixels)
         rvAdapter.setAdapterEventListener(object : FavoriteRvAdapter.AdapterEventListener{
             override fun onEvent(event: FavoriteAdaptedEvent) {
                 when(event) {
@@ -87,11 +98,6 @@ class FavoriteFragment : Fragment() {
         val itemTouchHelper = ItemTouchHelper(favoriteTouchCallback)
         itemTouchHelper.attachToRecyclerView(favoritesRv)
 
-        val rvWidth = favoritesRv.layoutParams.width
-        val rvWidth1 = favoritesRv.width
-        val rvWidth2 = favoritesRv.measuredWidth
-        rvAdapter.setRvWidth(rvWidth)
-
         favoritesRv.layoutManager = lm
         favoritesRv.adapter = rvAdapter
     }
@@ -102,7 +108,9 @@ class FavoriteFragment : Fragment() {
                 .subscribe({
                     val bundle = Bundle()
                     bundle.putLong(Constants.PHOTO_ID_EXTRA, photo.id)
-                    Navigation.findNavController(requireView()).navigate(R.id.action_favorites_to_single_photo, bundle)
+//                    Navigation.findNavController(requireView()).navigate(R.id.action_favorites_to_single_photo, bundle)
+                    navController.navigate(R.id.action_global_singlePhotoFragment, bundle)
+
                 }, {th -> Logi.logIt("Add to cache ERROR: ${th.message}")})
                 .apply { disposables.add(this) }
     }

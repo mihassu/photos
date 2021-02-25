@@ -4,30 +4,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    android:layout_height="match_parent">
 
 
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_interest"
+    <ru.mihassu.photos.ui.fragments.common.PhotosRecyclerView
+        android:id="@+id/rv_photos_list_interest"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:listitem="@layout/item_photo"
+        tools:itemCount="4">
 
-        <ru.mihassu.photos.ui.fragments.common.PhotosRecyclerView
-            android:id="@+id/rv_photos_list_interest"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/item_photo"
-            tools:itemCount="4">
+    </ru.mihassu.photos.ui.fragments.common.PhotosRecyclerView>
 
-        </ru.mihassu.photos.ui.fragments.common.PhotosRecyclerView>
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
     <ProgressBar
@@ -42,17 +34,47 @@
         android:indeterminateTint="@color/colorPrimaryDark"
         android:visibility="gone"/>
 
-    <TextView
-        android:id="@+id/tv_date"
+
+<!--    <Spinner-->
+<!--        android:id="@+id/spinner_dates"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        android:layout_marginTop="5dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        android:layout_marginStart="5dp"-->
+<!--        android:background="@color/colorPrimary"-->
+<!--        tools:listheader="@tools:sample/date/mmddyy">-->
+<!--    </Spinner>-->
+
+    <LinearLayout
+        android:id="@+id/date_chooser_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal"
+        android:translationY="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/bnv_border_round"
-        android:textSize="20sp"
-        tools:text="2021-01-15" />
+        app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/date_item_margin"
+            android:text="@string/date" />
+
+        <HorizontalScrollView
+            android:id="@+id/horizontal_scroll_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <ru.mihassu.photos.ui.fragments.interest.DatesScrollConstraint
+                android:id="@+id/dates_scroll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </HorizontalScrollView>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

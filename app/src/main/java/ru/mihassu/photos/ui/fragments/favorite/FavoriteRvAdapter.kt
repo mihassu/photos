@@ -11,12 +11,11 @@ import ru.mihassu.photos.R
 import ru.mihassu.photos.domain.Photo
 import ru.mihassu.photos.ui.fragments.common.PhotosDiffUtil
 
-class FavoriteRvAdapter(private val picasso: Picasso)
+class FavoriteRvAdapter(private val picasso: Picasso, val screenWidth: Int)
     : RecyclerView.Adapter<FavoriteRvAdapter.FavoritesViewHolder>(), IFavoriteTouchAdapter {
 
     private var dataList: List<Photo> = listOf()
     private var adapterEventListener: AdapterEventListener? = null
-    private var rvWidth: Int = 100
 
 
     fun setDataList(data: List<Photo>) {
@@ -50,10 +49,9 @@ class FavoriteRvAdapter(private val picasso: Picasso)
 //            titleField.setText(dataList.get(pos).getTitle());
             picasso
                     .load(dataList[pos].getLargeSizeUrl())
-//                    .transform(FitWidthTransformation(rvWidth))
-                    .placeholder(R.drawable.placeholder_favorites)
+                    .placeholder(R.drawable.placeholder_test)
                     .error(R.drawable.placeholder_error)
-                    .resize(1080, 1296)
+                    .resize(screenWidth, (screenWidth * 1.2).toInt())
                     .centerCrop()
                     .into(photoField)
             itemView.setOnClickListener { v: View? ->
@@ -69,9 +67,6 @@ class FavoriteRvAdapter(private val picasso: Picasso)
         this.adapterEventListener = adapterEventListener
     }
 
-    fun setRvWidth(width: Int) {
-        this.rvWidth = width
-    }
 
     //Вызывается при смахивании
     override fun onItemDismiss(position: Int) {

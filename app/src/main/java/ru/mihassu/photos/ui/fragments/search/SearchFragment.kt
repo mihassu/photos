@@ -28,18 +28,26 @@ import ru.mihassu.photos.interactor.SearchInteractor
 import ru.mihassu.photos.repository.PhotosRepository
 import ru.mihassu.photos.ui.animation.MyAnimator
 import ru.mihassu.photos.ui.db.DataBaseInteractor
-import ru.mihassu.photos.ui.fragments.common.PhotosCallback
-import ru.mihassu.photos.ui.fragments.common.PhotosRecyclerView
-import ru.mihassu.photos.ui.fragments.common.RecyclerViewEvents
-import ru.mihassu.photos.ui.fragments.common.RvScrollListener
+import ru.mihassu.photos.ui.fragments.common.*
+import ru.mihassu.photos.ui.fragments.photos.PhotosFragment
 import ru.mihassu.photos.util.hideKeyboard
 import javax.inject.Inject
 
-class SearchFragment : Fragment() {
+class SearchFragment : BaseFragment() {
 
     companion object {
+        private var instance: SearchFragment? = null
         var PER_PAGE = 40
+        fun getInstance() : Fragment {
+            return if (instance == null) {
+                instance = SearchFragment()
+                instance!!
+            } else {
+                instance!!
+            }
+        }
     }
+
 
     @Inject
     lateinit var picasso: Picasso
@@ -58,6 +66,8 @@ class SearchFragment : Fragment() {
     private lateinit var viewModel: SearchViewModel
     private lateinit var animator: MyAnimator
     private val disposables = CompositeDisposable()
+    private lateinit var navController: NavController
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +86,7 @@ class SearchFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         animator = MyAnimator(requireContext())
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_container_main)
         viewModel.getPhotosLiveData()
                 .observe(viewLifecycleOwner) { photosCallback: PhotosCallback ->
                     when (photosCallback) {
@@ -140,7 +151,8 @@ class SearchFragment : Fragment() {
                 .subscribe({
                     val bundle = Bundle()
                     bundle.putLong(Constants.PHOTO_ID_EXTRA, photo.id)
-                    Navigation.findNavController(requireView()).navigate(R.id.action_search_to_single_photo, bundle)
+//                    Navigation.findNavController(requireView()).navigate(R.id.action_search_to_single_photo, bundle)
+                    navController.navigate(R.id.action_global_singlePhotoFragment, bundle)
                 }, {th -> Logi.logIt("Add to cache ERROR: ${th.message}")})
                 .apply { disposables.add(this) }
 
