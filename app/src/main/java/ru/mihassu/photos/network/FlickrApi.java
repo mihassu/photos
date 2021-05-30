@@ -7,6 +7,7 @@ import ru.mihassu.photos.data.entity.ApiPhotosResponse;
 import ru.mihassu.photos.data.entity.CommentsResponse;
 import ru.mihassu.photos.data.entity.InterestResponse;
 import ru.mihassu.photos.data.entity.SizesResponse;
+import ru.mihassu.photos.data.entity.info.PhotoInfoResponse;
 
 public interface FlickrApi {
 
@@ -49,5 +50,12 @@ public interface FlickrApi {
                                                   @Query("page") int page,
                                                   @Query("format") String format,
                                                   @Query("nojsoncallback") int n);
+
+    @GET("services/rest/")
+    Single<PhotoInfoResponse> getPhotoInfo(@Query("method")String method,
+                                           @Query("api_key")String apiKey,
+                                           @Query("photo_id") String photoId,
+                                           @Query("format") String format,
+                                           @Query("nojsoncallback") int n);
 
 }

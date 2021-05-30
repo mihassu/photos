@@ -3,6 +3,7 @@ package ru.mihassu.photos.data;
 import java.util.List;
 
 import io.reactivex.Single;
+import ru.mihassu.photos.data.entity.info.PhotoInfoResponse;
 import ru.mihassu.photos.domain.PhotoComment;
 import ru.mihassu.photos.domain.PhotoPage;
 import ru.mihassu.photos.domain.PhotoSize;
@@ -13,5 +14,5 @@ public interface PhotosDataSource {
     Single<List<PhotoSize>> getPhotoSizes(String photoId);
     Single<List<PhotoComment>> getPhotoComments(String photoId);
     Single<PhotoPage> getInterestingPhotos(String date, int pageNumber, int perPage);
-
+    Single<PhotoInfoResponse> getPhotoInfo(String photoId);
 }

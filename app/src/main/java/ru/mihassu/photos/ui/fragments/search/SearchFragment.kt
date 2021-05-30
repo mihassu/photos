@@ -1,7 +1,6 @@
 package ru.mihassu.photos.ui.fragments.search
 
 import android.os.Bundle
-import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -24,12 +22,11 @@ import ru.mihassu.photos.R
 import ru.mihassu.photos.common.Constants
 import ru.mihassu.photos.common.Logi
 import ru.mihassu.photos.domain.Photo
-import ru.mihassu.photos.interactor.SearchInteractor
 import ru.mihassu.photos.repository.PhotosRepository
 import ru.mihassu.photos.ui.animation.MyAnimator
 import ru.mihassu.photos.ui.db.DataBaseInteractor
+import ru.mihassu.photos.ui.fragments.base.BaseFragment
 import ru.mihassu.photos.ui.fragments.common.*
-import ru.mihassu.photos.ui.fragments.photos.PhotosFragment
 import ru.mihassu.photos.util.hideKeyboard
 import javax.inject.Inject
 

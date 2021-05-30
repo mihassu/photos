@@ -1,4 +1,4 @@
-package ru.mihassu.photos.ui.fragments.common
+package ru.mihassu.photos.ui.fragments.base
 
 import android.animation.ObjectAnimator
 import android.os.Bundle
@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
 import ru.mihassu.photos.common.Logi
+import ru.mihassu.photos.ui.fragments.common.AnimatedFragment
 
 open class BaseFragment: Fragment(), AnimatedFragment {
 

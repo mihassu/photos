@@ -50,6 +50,7 @@ class PhotosRvAdapter(private val picasso: Picasso, private val loadMoreRequest:
             val height = lp.height
             picasso.load(dataList[pos].url)
                     .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder_photos_error)
                     .resize(width, height)
                     .centerCrop()
 //                    .transform(CropSquareTransformation())

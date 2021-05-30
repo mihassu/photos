@@ -21,5 +21,12 @@
 <!--    InterestFragment-->
     <string name="date">Дата</string>
 
+<!--    SinglePhotoFragment-->
+
+    <string name="photo_date">Дата</string>
+    <string name="photo_views">Просмотры</string>
+    <string name="photo_owner">Автор</string>
+    <string name="photo_tags">Тэги</string>
+    <string name="photo_field_description">PhotoField</string>
 
 </resources>

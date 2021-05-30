@@ -1,14 +1,13 @@
 package ru.mihassu.photos.ui.fragments.photos
 
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
+//import android.support.v4.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -18,15 +17,16 @@ import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
+import kotlinx.android.synthetic.main.fragment_photos.*
 import ru.mihassu.photos.App
 import ru.mihassu.photos.R
 import ru.mihassu.photos.common.Constants
 import ru.mihassu.photos.common.Logi
 import ru.mihassu.photos.domain.Photo
-import ru.mihassu.photos.interactor.SearchInteractor
 import ru.mihassu.photos.repository.PhotosRepository
 import ru.mihassu.photos.ui.animation.MyAnimator
 import ru.mihassu.photos.ui.db.DataBaseInteractor
+import ru.mihassu.photos.ui.fragments.base.BaseFragment
 import ru.mihassu.photos.ui.fragments.common.*
 import javax.inject.Inject
 
@@ -111,7 +111,7 @@ class PhotosFragment : BaseFragment() //extends MvpAppCompatFragment implements 
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView(view)
         initViews(view)
-        initSnackbar(view,"Конец", "Вверх")
+//        initSnackbar(view,"Конец", "Вверх")
     }
 
     override fun onResume() {

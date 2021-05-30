@@ -1,25 +1,18 @@
 package ru.mihassu.photos.ui.fragments.interest
 
-import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.animation.doOnEnd
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.squareup.picasso.Picasso
-import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
-import kotlinx.android.synthetic.main.fragment_interest.*
 import ru.mihassu.photos.App
 import ru.mihassu.photos.R
 import ru.mihassu.photos.common.Constants
@@ -28,10 +21,8 @@ import ru.mihassu.photos.domain.Photo
 import ru.mihassu.photos.repository.PhotosRepository
 import ru.mihassu.photos.ui.animation.MyAnimator
 import ru.mihassu.photos.ui.db.DataBaseInteractor
+import ru.mihassu.photos.ui.fragments.base.BaseFragment
 import ru.mihassu.photos.ui.fragments.common.*
-import ru.mihassu.photos.ui.fragments.photos.PhotosFragment
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 class InterestFragment : BaseFragment() {

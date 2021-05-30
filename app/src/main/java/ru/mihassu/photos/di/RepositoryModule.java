@@ -9,9 +9,10 @@ import ru.mihassu.photos.interactor.SearchInteractorImpl;
 import ru.mihassu.photos.network.FlickrApi;
 import ru.mihassu.photos.data.PhotosRepositoryImpl;
 import ru.mihassu.photos.repository.PhotosRepository;
+import ru.mihassu.photos.ui.db.DataBaseInteractor;
 import ru.mihassu.photos.ui.paging.PhotosPositionalDataSourceFactory;
 
-@Module(includes = NetworkModule.class)
+@Module(includes = {NetworkModule.class, RoomModule.class})
 public class RepositoryModule {
 
     @Provides
@@ -22,8 +23,8 @@ public class RepositoryModule {
 
     @Provides
     @AppScope
-    PhotosRepository providePhotosRepository(PhotosDataSource photosDataSource) {
-        return new PhotosRepositoryImpl(photosDataSource);
+    PhotosRepository providePhotosRepository(PhotosDataSource photosDataSource, DataBaseInteractor dataBaseInteractor) {
+        return new PhotosRepositoryImpl(photosDataSource, dataBaseInteractor);
     }
 
 

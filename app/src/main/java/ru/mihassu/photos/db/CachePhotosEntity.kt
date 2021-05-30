@@ -4,5 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class CachePhotosEntity(@PrimaryKey val id: Long, val title: String, val url: String) {
-}
+data class CachePhotosEntity(
+        @PrimaryKey
+        val id: Long,
+        val title: String,
+        val url: String
+        ) {}

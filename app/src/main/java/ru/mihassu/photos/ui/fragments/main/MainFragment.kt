@@ -149,12 +149,17 @@ class MainFragment : Fragment() {
             activeFragment?.let {
                 if (it == fragment) { ft.detach(it); emitter.onComplete() }
                 (it as? AnimatedFragment)?.let { animatedFragment ->
-                    animatedFragment.showQuitAnimation().subscribe {
+                    animatedFragment.showQuitAnimation().subscribe({
                         ft.detach(it)
                         emitter.onComplete()
-                    } }
+                    }, { th ->
+                        Logi.logIt("ERROR in MainFragment - detachWithAnimation(): ${th.message}")
+                        ft.detach(it)
+                        emitter.onComplete()
+                    })}
                         ?: run { ft.detach(it); emitter.onComplete() }
-            } ?: emitter.onComplete()
+            } ?:
+            emitter.onComplete()
         }
     }
 

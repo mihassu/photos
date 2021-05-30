@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.fragment_single_photo.*
 import ru.mihassu.photos.App.Companion.appComponent
 import ru.mihassu.photos.R
 import ru.mihassu.photos.common.Constants
@@ -22,8 +24,6 @@ import ru.mihassu.photos.domain.Photo
 import ru.mihassu.photos.repository.PhotosRepository
 import ru.mihassu.photos.ui.animation.MyAnimator
 import ru.mihassu.photos.ui.custom.FitWidthTransformation
-import ru.mihassu.photos.ui.db.DataBaseInteractor
-import ru.mihassu.photos.ui.fragments.common.BaseFragment
 import javax.inject.Inject
 
 class SinglePhotoFragment : Fragment() {
@@ -32,8 +32,8 @@ class SinglePhotoFragment : Fragment() {
     lateinit var picasso: Picasso
     @Inject
     lateinit var photosRepository: PhotosRepository
-    @Inject
-    lateinit var dbInteractor: DataBaseInteractor
+//    @Inject
+//    lateinit var dbInteractor: DataBaseInteractor
 
     private lateinit var photoTitleField: TextView
     private lateinit var commentsTitle: TextView
@@ -63,7 +63,7 @@ class SinglePhotoFragment : Fragment() {
 
         val appComponent = appComponent
         appComponent.inject(this)
-        viewModel = ViewModelProvider(this, SinglePhotoViewModelFactory(photosRepository, dbInteractor))
+        viewModel = ViewModelProvider(this, SinglePhotoViewModelFactory(photosRepository))
                 .get(SinglePhotoViewModel::class.java)
         animator = MyAnimator(requireContext())
     }
@@ -82,19 +82,19 @@ class SinglePhotoFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.getPhotoLiveData().observe(this, { photo: Photo ->
-            currentPhoto = photo
-            picasso
-                    .load(photo.getMaxSizeUrl())
-                    .error(R.drawable.placeholder_error)
-                    .transform(FitWidthTransformation(requireContext().resources.displayMetrics.widthPixels))
-//                    .resize(requireContext().resources.displayMetrics.widthPixels, 1000)
-//                    .centerInside()
-                    .into(imageField)
-
-            photoTitleField.text = photo.title
-            hideProgress()
-            viewModel.checkFavorite(photo)
+        viewModel.getPhotoLiveData().observe(this, { photoCallback: SinglePhotoCallback ->
+            when(photoCallback) {
+                is SinglePhotoCallback.PhotoLoaded -> {
+                    currentPhoto = photoCallback.photo
+                    showPhoto(photoCallback.photo)
+                    hideProgress()
+                    viewModel.checkFavorite(photoCallback.photo)
+                }
+                is SinglePhotoCallback.PhotoError -> {
+                    showToast(photoCallback.error.message.toString())
+                    hideProgress()
+                }
+            }
         })
 
         viewModel.getIsPhotoFavoriteLiveData().observe(this, { isFavorite: Boolean ->
@@ -110,7 +110,7 @@ class SinglePhotoFragment : Fragment() {
             }
         })
 
-        photoId?.let { viewModel.load(it) }
+        photoId?.let { showProgress(); viewModel.load(it) }
     }
 
     private fun initViews(v: View) {
@@ -134,6 +134,8 @@ class SinglePhotoFragment : Fragment() {
 //            }
 //            override fun onError() { }
 //        }
+        icon_date.visibility = View.INVISIBLE
+        icon_views.visibility = View.INVISIBLE
     }
 
     private fun initRecyclerView(v: View) {
@@ -185,6 +187,60 @@ class SinglePhotoFragment : Fragment() {
 
                 }
             })
+        }
+    }
+
+    private fun showPhoto(photo: Photo) {
+        picasso
+                .load(photo.getMaxSizeUrl())
+                .error(R.drawable.placeholder_error)
+                .transform(FitWidthTransformation(requireContext().resources.displayMetrics.widthPixels))
+//                    .resize(requireContext().resources.displayMetrics.widthPixels, 1000)
+//                    .centerInside()
+                .into(imageField, object : Callback {
+                    override fun onSuccess() {
+                        showPhotoDetails(photo)
+                    }
+
+                    override fun onError() {
+
+                    }
+                })
+
+        photoTitleField.text = photo.title
+    }
+
+    private fun showPhotoDetails(photo: Photo) {
+        icon_date.visibility = View.VISIBLE
+        icon_views.visibility = View.VISIBLE
+
+        photo.dates?.let {
+    //tv_date_field.text = "${getString(R.string.photo_date)}: ${it.taken}"
+            tv_date_field.text = it.taken
+        }
+        photo.views?.let {
+    //tv_views_field.text = "${getString(R.string.photo_views)}: $it"
+            tv_views_field.text = it
+        }
+        photo.owner?.let {
+            val ownerString = buildString {
+                append(getString(R.string.photo_owner))
+                append(": ")
+                append(it.username)
+            }
+            tv_owner_field.text = ownerString
+        }
+        photo.tags?.let { tags ->
+            if (tags.isNotEmpty()) {
+                val tagsString = buildString {
+                    append(getString(R.string.photo_tags))
+                    append(": ")
+                    tags.forEach { tag ->
+                        tag.content?.let { append("#"); append(it); append(" ") }
+                    }
+                }
+                tv_tags_field.text = tagsString.trimEnd(' ')
+            }
         }
     }
 

@@ -1,15 +1,19 @@
 package ru.mihassu.photos.domain
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+data class
 
 
-data class Photo(
+
+Photo(
         val id: Long,
         val title: String,
         val url: String,
         val sizes: List<PhotoSize> = listOf(),
-        val comments: List<PhotoComment> = listOf()
+        val comments: List<PhotoComment> = listOf(),
+        val views: String? = null,
+        val owner: PhotoOwner? = null,
+        val tags: List<PhotoTag>? = null,
+        val dates: PhotoDates? = null
 ) {
 
     override fun equals(other: Any?): Boolean {

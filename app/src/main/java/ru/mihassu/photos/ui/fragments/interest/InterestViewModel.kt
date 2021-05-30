@@ -8,20 +8,17 @@ import ru.mihassu.photos.common.Logi
 import ru.mihassu.photos.domain.PhotoPage
 import ru.mihassu.photos.repository.PhotosRepository
 import ru.mihassu.photos.ui.db.DataBaseInteractor
-import ru.mihassu.photos.ui.fragments.common.BaseViewModel
+import ru.mihassu.photos.ui.fragments.base.BaseViewModel
 import ru.mihassu.photos.ui.fragments.common.PhotosCallback
-import java.util.*
 
 class InterestViewModel(private val photosRepository: PhotosRepository, dbInteractor: DataBaseInteractor) : BaseViewModel(dbInteractor) {
 
     private val PER_PAGE = 80
-
     private val datesLiveData: MutableLiveData<DatesListState> = MutableLiveData()
     private val datesListState: DatesListState = DatesListState()
 
     init {
-//        datesLiveData.value = datesListState.setCurrentDate(0)
-//        initLoad(datesListState.getCurrentDatePos())
+//        initLoad(0)
     }
 
     fun getDatesLiveData() : LiveData<DatesListState> = datesLiveData
@@ -60,7 +57,10 @@ class InterestViewModel(private val photosRepository: PhotosRepository, dbIntera
                     datesLiveData.value = datesListState
                     pageNumber = SECOND_PAGE
                 }
-                ) { throwable: Throwable -> Logi.logIt("${throwable.message} in initLoad() -> getInterestingPhotos()") }
+                ) { throwable: Throwable ->
+                    Logi.logIt("${throwable.message} in initLoad() -> getInterestingPhotos()")
+                    photosLiveData.value = PhotosCallback.PhotosError(throwable)
+                }
                 .apply { disposables.add(this) }
 
     }

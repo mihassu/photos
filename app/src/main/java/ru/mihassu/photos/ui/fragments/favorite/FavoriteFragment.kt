@@ -20,8 +20,7 @@ import ru.mihassu.photos.common.Constants
 import ru.mihassu.photos.common.Logi
 import ru.mihassu.photos.domain.Photo
 import ru.mihassu.photos.ui.db.DataBaseInteractor
-import ru.mihassu.photos.ui.fragments.common.BaseFragment
-import ru.mihassu.photos.ui.fragments.photos.PhotosFragment
+import ru.mihassu.photos.ui.fragments.base.BaseFragment
 import javax.inject.Inject
 
 class FavoriteFragment : BaseFragment() {

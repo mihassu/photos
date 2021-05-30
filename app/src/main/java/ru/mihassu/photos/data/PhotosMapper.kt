@@ -6,7 +6,9 @@ import ru.mihassu.photos.domain.Photo
 import ru.mihassu.photos.domain.PhotoPage
 import java.util.*
 
-object PhotosMapper {
+object
+
+PhotosMapper {
     @JvmStatic
     fun map(apiResponse: ApiPhotosResponse): PhotoPage {
         val photoList: MutableList<Photo> = ArrayList()

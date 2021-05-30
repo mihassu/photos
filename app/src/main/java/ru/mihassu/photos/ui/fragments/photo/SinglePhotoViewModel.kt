@@ -11,35 +11,47 @@ import ru.mihassu.photos.domain.Photo
 import ru.mihassu.photos.repository.PhotosRepository
 import ru.mihassu.photos.ui.db.DataBaseInteractor
 
-class SinglePhotoViewModel(private val photosRepository: PhotosRepository, private val dbInteractor: DataBaseInteractor) : ViewModel() {
+class SinglePhotoViewModel(private val photosRepository: PhotosRepository) : ViewModel() {
 
-    private val photoLiveData: MutableLiveData<Photo> = MutableLiveData<Photo>()
+    private val photoLiveData: MutableLiveData<SinglePhotoCallback> = MutableLiveData<SinglePhotoCallback>()
     private val isPhotoFavoriteLiveData: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     private val disposables: CompositeDisposable = CompositeDisposable()
 
 
     fun getIsPhotoFavoriteLiveData(): LiveData<Boolean> = isPhotoFavoriteLiveData
-    fun getPhotoLiveData() : LiveData<Photo> = photoLiveData
+    fun getPhotoLiveData() : LiveData<SinglePhotoCallback> = photoLiveData
 
     fun load(photoId: Long) {
-        dbInteractor.getFromCacheBaseById(photoId)
-                .zipWith(photosRepository.getPhotoSizes(photoId.toString()), { photo, photoSizes ->
-                    photo.copy(sizes = photoSizes) //добавление PhotoSizes
-                })
-                .zipWith(photosRepository.getPhotoComments(photoId.toString()), { photo, photoComments ->
-                    photo.copy(comments = photoComments) //добавление комментариев
-                })
+        photosRepository.getPhotoById(photoId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { photo -> photoLiveData.value = photo},
-                        { th -> Logi.logIt("SinglePhotoViewModel - load() error: ${th.message}")}
+                        { photo -> photoLiveData.value = SinglePhotoCallback.PhotoLoaded(photo)},
+                        { th ->
+                            Logi.logIt("SinglePhotoViewModel - load() error: ${th.message}")
+                            photoLiveData.value = SinglePhotoCallback.PhotoError(th)
+                        }
                 )
                 .apply { disposables.add(this) }
+
+//        dbInteractor.getFromCacheBaseById(photoId)
+//                .zipWith(photosRepository.getPhotoSizes(photoId.toString()), { photo, photoSizes ->
+//                    photo.copy(sizes = photoSizes)
+//                })
+//                .zipWith(photosRepository.getPhotoComments(photoId.toString()), { photo, photoComments ->
+//                    photo.copy(comments = photoComments)
+//                })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(
+//                        { photo -> photoLiveData.value = photo},
+//                        { th -> Logi.logIt("SinglePhotoViewModel - load() error: ${th.message}")}
+//                )
+//                .apply { disposables.add(this) }
     }
 
     fun addFavoritePhoto(photo: Photo) {
-        dbInteractor.toggleFavoritesInBase(photo)
+        photosRepository.toggleFavoritePhoto(photo)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ isFavorite ->
@@ -49,7 +61,7 @@ class SinglePhotoViewModel(private val photosRepository: PhotosRepository, priva
     }
 
     fun checkFavorite(photo: Photo) {
-        dbInteractor.isPhotoFavorite(photo)
+        photosRepository.checkFavoritePhoto(photo)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { isFavorite -> isPhotoFavoriteLiveData.value = isFavorite }

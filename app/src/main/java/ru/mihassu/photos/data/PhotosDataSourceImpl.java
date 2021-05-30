@@ -13,6 +13,7 @@ import ru.mihassu.photos.data.entity.Comment;
 import ru.mihassu.photos.data.entity.Comments;
 import ru.mihassu.photos.data.entity.SizeApi;
 import ru.mihassu.photos.data.entity.SizesResponse;
+import ru.mihassu.photos.data.entity.info.PhotoInfoResponse;
 import ru.mihassu.photos.domain.PhotoComment;
 import ru.mihassu.photos.domain.PhotoPage;
 import ru.mihassu.photos.domain.PhotoSize;
@@ -25,6 +26,7 @@ public class PhotosDataSourceImpl implements PhotosDataSource {
     private final String GET_SIZES_METHOD = "flickr.photos.getSizes";
     private final String GET_COMMENTS_METHOD = "flickr.photos.comments.getList";
     private final String GET_INTERESTING_METHOD = "flickr.interestingness.getList";
+    private final String GET_PHOTO_INFO_METHOD = "flickr.photos.getInfo";
     private final String API_KEY = "37ffb3155aa34e0e22081fc94dbabe2e";
     private final String JSON_FORMAT = "json";
     private final int NO_JSON_CALLBACK = 1;
@@ -99,5 +101,10 @@ public class PhotosDataSourceImpl implements PhotosDataSource {
                 .getInterestingPhotos(GET_INTERESTING_METHOD, API_KEY, date, perPage, pageNumber, JSON_FORMAT, NO_JSON_CALLBACK)
                 .map(PhotosMapper::mapInterest)
                 .subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Single<PhotoInfoResponse> getPhotoInfo(String photoId) {
+        return flickrApi.getPhotoInfo(GET_PHOTO_INFO_METHOD, API_KEY, photoId, JSON_FORMAT, NO_JSON_CALLBACK);
     }
 }

@@ -1,4 +1,4 @@
-package ru.mihassu.photos.ui.fragments.common
+package ru.mihassu.photos.ui.fragments.base
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,6 +8,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 import ru.mihassu.photos.domain.Photo
 import ru.mihassu.photos.ui.db.DataBaseInteractor
+import ru.mihassu.photos.ui.fragments.common.DataListState
+import ru.mihassu.photos.ui.fragments.common.PhotosCallback
 
 open class BaseViewModel(dbInteractor: DataBaseInteractor): ViewModel() {
 
@@ -43,7 +45,8 @@ open class BaseViewModel(dbInteractor: DataBaseInteractor): ViewModel() {
 
             override fun onComplete() {}
         }
-        disposables.add(dataListState.dataListProcessor.subscribeWith(dataListObserver))
+        dataListState.dataListProcessor.subscribeWith(dataListObserver)
+                .apply { disposables.add(this) }
     }
 
     fun addToCache(photo: Photo): Completable {

@@ -19,4 +19,7 @@
     <dimen name="date_item_margin">10dp</dimen>
     <dimen name="date_item_radius">5dp</dimen>
 
+<!--    SinglePhoto-->
+    <dimen name="photo_detail_item_height">25dp</dimen>
+    <dimen name="photo_detail_item_margin">5dp</dimen>
 </resources>
